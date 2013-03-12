@@ -2,7 +2,7 @@
  * Generate all possible miRNAs from a precursor and determine wether it is 
  * well positioned or not
  */
-package miRdupPredictor;
+package paper;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,6 +12,9 @@ import java.util.TooManyListenersException;
 import miRdup.Features;
 import miRdup.Main;
 import miRdup.RNAfold;
+import miRdupPredictor.AlignmentObject;
+import miRdupPredictor.AlignmentObject;
+import miRdupPredictor.AlignmentObject;
 
 /**
  *

@@ -1,11 +1,15 @@
 /*
  * Run tests
  */
-package miRdup;
+package paper;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import miRdup.Features;
+import miRdup.Main;
+import miRdup.RNAfold;
+import miRdup.WekaModule;
 
 /**
  *
@@ -21,9 +25,10 @@ public class Run_tests {
 //        validationSpecies();
 //        batchTest();
 //        predictmiRNAposition();
-        predictmiRNApositionByFile();
+//        predictmiRNApositionByFile();
 //        newRNAfold();
 //        getmirnastar();
+        validate();
 
     }
     
@@ -166,9 +171,8 @@ public class Run_tests {
 //        args=new String[]{"-c","all.AFAdaboostRF.model","-v","PredictedDatasets"+File.separator+"miRdeep.ToPredict.txt.folded"};
 //        setOptions(args);miRdupExecutionEMBL();
                 
-        args=new String[]{"-c","mammal.AFAdaboostRF.model","-v","PredictedDatasets"+File.separator+"SRR029124.mirdeep2.toPredict.txt.folded","-p"};
-        setOptions(args);miRdupExecutionEMBL();
-        
+//        args=new String[]{"-c","mammal.AFAdaboostRF.model","-v","PredictedDatasets"+File.separator+"SRR029124.mirdeep2.toPredict.txt.folded","-p"};
+//        setOptions(args);miRdupExecutionEMBL();
         
         
 //        args=new String[]{"-c","all.AFAdaboostJ48.model","-v","PredictedDatasets\\miRbase_exp.ToPredict.folded","-b","PredictedDatasets\\miRbase_exp.ToPredict.folded.arff"};
@@ -254,5 +258,11 @@ public class Run_tests {
         Features f = new Features(mirna, precursor, structure, true);
         String star=f.getMirnaStar();
         System.out.println(star);
+    }
+    
+    private static void validate(){
+        String[] args=new String[]{"-c","mammal.model","-v","PredictedDatasets"+File.separator+"all.mirna.5p.3p.precursors.from.aln.anc.folded.txt"};
+        setOptions(args);miRdupExecutionEMBL();
+        
     }
 }

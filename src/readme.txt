@@ -60,10 +60,10 @@ OTHER EXAMPLES:
 		java -jar miRdup.jar -m matures.fasta -h hairpinPrecursors.fasta -k primates -o organisms.txt -r PATH_TO_RNAFOLD
 
 - If the model has already been created, submit it with the validated dataset
-		java -jar miRdup.jar -t sequencesToValidate.txt -c species.model -r PATH_TO_RNAFOLD
+		java -jar miRdup.jar -v sequencesToValidate.txt -c species.model -r PATH_TO_RNAFOLD
 
 - If you want that miRdup predict a potential miRNA in the unvalidated precursors, add option -p (much slower): 
-		java -jar miRdup.jar -t sequencesToValidate.txt -c species.model -p -r PATH_TO_RNAFOLD
+		java -jar miRdup.jar -v sequencesToValidate.txt -c species.model -p -r PATH_TO_RNAFOLD
 		
 - If you get Java heap space Exceptions (java.lang.OutOfMemoryError), increase memory like this: 
 		java -jar -Xms500m -Xmx1500m miRdup.jar [OPTIONS]

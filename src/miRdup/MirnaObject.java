@@ -33,7 +33,7 @@ public final class MirnaObject {
     private String predictedmiRNAstar;
     private String error;
     
-    MirnaObject(){
+    public MirnaObject(){
         
     }
     
@@ -283,6 +283,7 @@ public final class MirnaObject {
         
         String s="\n--------\n"+
                 "#ID\t"+this.getIdName()+"\n"+
+                "#WE\t"+this.getArff()+"\n"+
 //                "#FF\tmfe\t"+arff[0]+"\n"+
 //                "#FF\tMaximumLengthWithoutBulges\t"+arff[1]+"\n"+
 //                "#FF\tMaximumLengthWithoutBulgesPerc\t"+arff[2]+"\n"+

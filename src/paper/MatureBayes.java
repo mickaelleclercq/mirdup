@@ -1,7 +1,7 @@
 /*
  * Get differences from predicted file of MatureBayes
  */
-package miRdupPredictor;
+package paper;
 
 import java.io.BufferedReader;
 import java.io.File;

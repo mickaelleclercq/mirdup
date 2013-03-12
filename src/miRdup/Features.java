@@ -34,6 +34,10 @@ public final class Features {
         mirnastarStruc = precStruc.substring(prec.indexOf(complementaritySequence), prec.indexOf(complementaritySequence)+complementaritySequence.length());
         df.setMaximumFractionDigits(2);
     }
+
+    Features() {
+        
+    }
     
     
     
@@ -1528,6 +1532,11 @@ public final class Features {
      */
     public void setComplementaritySequence(String complementaritySequence) {
         this.complementaritySequence = complementaritySequence;
+    }
+    
+    public String toStringError(){
+        String features=getID()+",00,0.0,0,0,0,0,0,false,0,false,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0.0,0.0,0.0,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0.0,A,A,A,A,A,A,false";
+        return features;
     }
     
     public String toStringAllAttributes(){

@@ -158,17 +158,23 @@ public class AdaptDataForWeka {
                             folded=true;
                         }
                         Features f;                        
-                        if(positiveDataset){
-                            f = new Features(mirna, prec, struc, true);
-                        } else{
-                            mirna = mirnaNegativeData(mirna, prec, struc, new ArrayList<MirnaObject>()); //generate new mirna
-                            f = new Features(mirna, prec, struc, false);
-                        }                        
-                        
-                        if (bestAttributes) {
-                            al.add(f.toStringBestAttributes());
-                        } else {
-                            al.add(f.toStringAllAttributes());
+                        try {
+                            if (positiveDataset) {
+                                f = new Features(mirna, prec, struc, true);
+                            } else {
+                                mirna = mirnaNegativeData(mirna, prec, struc, new ArrayList<MirnaObject>()); //generate new mirna
+                                f = new Features(mirna, prec, struc, false);
+                            }                            
+                            
+                            if (bestAttributes) {
+                                al.add(f.toStringBestAttributes());
+                            } else {
+                                al.add(f.toStringAllAttributes());
+                            }
+                        } catch (Exception e) {
+                            System.err.println("error at (probably bad hairpin) "+line);
+                            f=new Features();
+                            al.add(f.toStringError());
                         }
 
                         cpt++;
@@ -177,7 +183,7 @@ public class AdaptDataForWeka {
                             pw.flush();
                         }
                     } catch (Exception e) {
-                        //System.err.println(mirna);
+                        
                     }
                 }
                 pw.flush();pw.close();

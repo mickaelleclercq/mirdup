@@ -1,7 +1,7 @@
 /*
  * Kolmogorov smirnov TEST
  */
-package graphs;
+package paper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -350,7 +350,7 @@ public class KStest {
                 n+=Double.parseDouble(finaltab[i][1].replace(",", "."));                
             }
             double critD=1.36/Math.sqrt(n);
-            
+            System.out.println(title+" n="+n);
             //normalize
             Double normtab[][]=new Double[finaltab.length][(infiles.length)];
             for (int i = 0; i < finaltab.length; i++) {

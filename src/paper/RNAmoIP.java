@@ -1,12 +1,13 @@
 /*
  * RNAmoIP
  */
-package miRdup;
+package paper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import miRdup.Tools;
 
 /**
  *

@@ -2,7 +2,7 @@
  * Generate GnuPlot scripts
  * 
  */
-package graphs;
+package paper;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -40,7 +40,7 @@ public class graphs {
             "all.arff",
             "mammal.arff",
             "Pisces.arff",
-            "Nematoda.arff",            
+            "nematod.arff",            
             "Arthropoda.arff",
             "Viridiplantae.arff"};
         analyseFiles(infiles);
@@ -304,7 +304,12 @@ public class graphs {
                 maxperc=0;
                 for (int j = 1; j < infiles.length+1; j++) {
                     for (int i = 0; i < intervaltab.length; i++) {
-                        double d = Double.parseDouble(intervaltab[i][j].replace(",", "."));
+                        double d = 0;
+                        try {
+                            d = Double.parseDouble(intervaltab[i][j].replace(",", "."));
+                        } catch (NumberFormatException numberFormatException) {
+                            d=0;
+                        }
                         if (d>maxperc) {
                             maxperc=d;
                         }                  
@@ -322,7 +327,7 @@ public class graphs {
                 String h = infile.replace(".arff", "").replace("all", "miRbase");
                 headers+="\t"+h+"("+t+")";
             }
-            pw.println(headers+""+headers);
+            pw.println(headers+""+headers.substring(headers.indexOf("\t")));
             pw.flush();
             
             //add errorbars
@@ -332,7 +337,12 @@ public class graphs {
                 for (int i = 0; i < intervaltab.length; i++) {
                     for (int j = 0; j < infiles.length+1; j++) {                        
                         if (j>0) {
-                            double v=Double.parseDouble(intervaltab[i][j].replace(",", "."));
+                            double v = 0;
+                            try {
+                                v = Double.parseDouble(intervaltab[i][j].replace(",", "."));
+                            } catch (NumberFormatException numberFormatException) {
+                                v=0;
+                            }
                             double err = 1.96 * Math.sqrt((v / 100) * (1 - (v / 100)) / total[j-1]) * 100;
                             finaltabWithErrors[i][j + infiles.length] = dec.format(err);
                         } 

@@ -1,7 +1,7 @@
 /*
  * To parralise the calculs
  */
-package miRdupPredictor;
+package paper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

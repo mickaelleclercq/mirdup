@@ -1,7 +1,7 @@
 /*
  * read results after lsf
  */
-package miRdupPredictor;
+package paper;
 
 import java.io.*;
 import java.util.ArrayList;

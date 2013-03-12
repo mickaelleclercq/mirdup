@@ -1,7 +1,7 @@
 /*
  * Submit sequences to miRalign
  */
-package miRalign;
+package paper;
 
 import java.io.*;
 import java.net.*;
