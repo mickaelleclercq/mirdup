@@ -261,7 +261,7 @@ public class Run_tests {
     }
     
     private static void validate(){
-        String[] args=new String[]{"-c","mammal.model","-v","PredictedDatasets"+File.separator+"all.mirna.5p.3p.precursors.from.aln.anc.folded.txt"};
+        String[] args=new String[]{"-c","mammal.model","-v","PredictedDatasets"+File.separator+"all.mirna.5p.3p.precursors.from.aln.anc.txt"};
         setOptions(args);miRdupExecutionEMBL();
         
     }

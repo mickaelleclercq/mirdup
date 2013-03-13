@@ -253,14 +253,12 @@ public class WekaModule {
             FastVector fv = eval.predictions();
             
             // output
-//            PrintWriter pw=new PrintWriter(new FileWriter(predictionsFile+"."+Main.keyword+".miRdup.txt"));
-//            PrintWriter pwout=new PrintWriter(new FileWriter(predictionsFile+"."+Main.keyword+".miRdupOutput.txt"));
-            
             PrintWriter pw=new PrintWriter(new FileWriter(predictionsFile+"."+classifier+".miRdup.txt"));
             PrintWriter pwt=new PrintWriter(new FileWriter(predictionsFile+"."+classifier+".miRdup.tab.txt"));
             PrintWriter pwout=new PrintWriter(new FileWriter(predictionsFile+"."+classifier+".miRdupOutput.txt"));
             
             for (int i = 0; i < fv.size(); i++) { 
+                //System.out.println(fv.elementAt(i).toString());
                 String[] tab = fv.elementAt(i).toString().split(" ");
                 int actual=Integer.valueOf(tab[1].substring(0, 1));
                 int predicted=Integer.valueOf(tab[2].substring(0,1));
@@ -268,11 +266,20 @@ public class WekaModule {
                 boolean validated=false;
                 if (actual==predicted){ //case validated 
                     int s = tab[4].length();
-                    score=Double.valueOf(tab[4].substring(0, s-1));                    
+                    try {
+                        score = Double.valueOf(tab[4].substring(0, s - 1));
+                    } catch (NumberFormatException numberFormatException) {
+                        score=0.0;
+                    }
+                    
                     validated=true;
                 } else {// case not validated
                     int s = tab[5].length();
-                    score = Double.valueOf(tab[5].substring(0, s-1));
+                    try {
+                        score = Double.valueOf(tab[5].substring(0, s - 1));
+                    } catch (NumberFormatException numberFormatException) {
+                        score=0.0;
+                    }
                     validated=false;
                 }
                 MirnaObject m = alobj.get(i);
