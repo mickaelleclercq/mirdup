@@ -40,12 +40,22 @@ public final class Features {
     }
     
     
-    
+    //useless since RNAcofold calculate it
     public String getMFE(){                   
         computeComplementaritySequence();
-        return RNAfold.GetMfeDuplex(mirna, getComplementaritySequence());
-                   
+        return Vienna.GetMfeDuplexRNAduplex(mirna, getComplementaritySequence());                   
     }
+    
+    //partition function and base pairing probabilities
+    public String getCoFoldInfos(){                   
+        computeComplementaritySequence();
+        ViennaObject vo = Vienna.GetInfosDuplexRNAcofold(mirna, getComplementaritySequence());
+        if (vo.hasError()){
+            return vo.toStringError();
+        } else {
+            return vo.toStringRNAcofold();
+        }
+    }    
     
     public  int getLength(){
         return mirna.length();
@@ -1535,7 +1545,7 @@ public final class Features {
     }
     
     public String toStringError(){
-        String features=getID()+",00,0.0,0,0,0,0,0,false,0,false,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0.0,0.0,0.0,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0.0,A,A,A,A,A,A,false";
+        String features=getID()+",0,0,0,0,0,0,false,0,false,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0.0,0.0,0.0,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0.0,A,A,A,A,A,A,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,false";
         return features;
     }
     
@@ -1545,7 +1555,7 @@ public final class Features {
             features = ""
                     + getID() + ","
                     + getLength() + ","
-                    + getMFE() + ","
+//                    + getMFE() + ","
                     + df.format(getGCperc()).replace(",", ".") + ","
                     + getMaximumLengthWithoutBulges() + ","
                     + df.format(getMaximumLengthWithoutBulgesPerc()).replace(",", ".") + ","
@@ -1624,7 +1634,7 @@ public final class Features {
                     + getNtAtEndPlus1()+ ","
 //                    + getNtAtEndPlus2()+ ","
 //                    + getNtAtEndPlus3()+ ","
-                    
+                    + getCoFoldInfos()+","
                     + positive;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1639,7 +1649,7 @@ public final class Features {
             features = ""
                     + getID() + ","
 //                    + getLength() + ","
-                    + getMFE() + ","
+//                    + getMFE() + ","
 //                    + df.format(getGCperc()).replace(",", ".") + ","
                     + getMaximumLengthWithoutBulges() + ","
                     + df.format(getMaximumLengthWithoutBulgesPerc()).replace(",", ".") + ","

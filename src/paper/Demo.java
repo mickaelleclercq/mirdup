@@ -6,20 +6,17 @@ package paper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import miRdup.Features;
-import miRdup.Main;
-import miRdup.RNAfold;
-import miRdup.WekaModule;
+import miRdup.*;
 
 /**
  *
  * @author fyrox
  */
-public class Run_tests {
+public class Demo {
     public static String rnafold="/home/mycky/tools/ViennaRNA-2.0.6/Progs/";
 //    public static String rnafold="/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.7/Progs/";
     public static void main(String[] args) {   
-//        tests();
+        tests();
 //        batchTrain();
 //        AttributeSelection();
 //        validationSpecies();
@@ -28,7 +25,9 @@ public class Run_tests {
 //        predictmiRNApositionByFile();
 //        newRNAfold();
 //        getmirnastar();
-        validate();
+//        validate();
+//        RNAcofold();
+//        Vienna.checkViennaTools();
 
     }
     
@@ -43,18 +42,17 @@ public class Run_tests {
 //        args=new String[]{"-c","all.AFAdaboostRF.model","-v","PredictedDatasets\\all_lib.pred.mirnas.hairpins.txt.folded","-b",
 //        "PredictedDatasets\\all_lib.pred.mirnas.hairpins.txt.folded.arff"};        
 //                      
-//        //"-r","/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.5/Progs/","-k",
-//        args = new String[]{"-k","Viridiplantae",
-//        "-v","PredictedDatasets\\all_lib.pred.mirnas.hairpins.txt.folded","-b",
-//        "PredictedDatasets\\all_lib.pred.mirnas.hairpins.txt.folded.arff"};
+        //"-r","/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.5/Progs/","-k",
+        args = new String[]{"-r",rnafold,
+            "-k","all"};
 //
 //        args=new String[]{"-c","all.AFAdaboostRF.model","-v","PredictedDatasets\\SRR029124.mirdeep2.toPredict.txt.folded",
 //        "-b","PredictedDatasets\\SRR029124.mirdeep2.toPredict.txt.folded.arff"};
         
-        args=new String[]{"-k","all","-s","tmpfold-133348316.folded","-o","organisms.txt",
-            "-e","miRNA.dat","-a","all.arff"};
-        Main.bestFeatures=true;
-        Main.modelExtension=".BF.SVMmodel";
+//        args=new String[]{"-k","all","-s","tmpfold-133348316.folded","-o","organisms.txt",
+//            "-e","miRNA.dat","-a","all.arff"};
+//        Main.bestFeatures=true;
+//        Main.modelExtension=".BF.SVMmodel";
         Main.main(args);
 
     }
@@ -247,8 +245,14 @@ public class Run_tests {
     }
 
     private static void newRNAfold() {
-        String s=RNAfold.GetSecondaryStructure("CAGUUUGUUGUGAUGUGCUCCAAGCCGAGAAGCUGCAGAUGGAGGUUC");
+        String s=Vienna.GetSecondaryStructure("CAGUUUGUUGUGAUGUGCUCCAAGCCGAGAAGCUGCAGAUGGAGGUUC");
         System.out.println(s);
+    }
+    
+    private static void RNAcofold() {
+        ViennaObject vo =Vienna.GetInfosDuplexRNAcofold("ACCCUGUAGAUCCGAAUUUG", "AAAUUCGGUUCUAGAGAGGUUUGUG");
+        System.out.println(vo.toStringHeaderRNAcofold());
+        System.out.println(vo.toStringRNAcofold());
     }
 
     private static void getmirnastar() {

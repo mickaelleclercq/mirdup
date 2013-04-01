@@ -61,22 +61,27 @@ public class AdaptDataForWeka {
                 String mirna = o.getMatureSequence();
                 String prec = o.getPrecursorSequence();
                 String struc = o.getStructure();
-                Features f;
-                f = new Features(mirna, prec, struc, true);
-                
-                if (bestfeatures) {
-                    al.add(f.toStringBestAttributes());
-                } else {
-                    al.add(f.toStringAllAttributes());
-                }
-                
-                mirna = mirnaNegativeData(mirna, prec, struc, alobj); //generate new mirna
-                f = new Features(mirna, prec, struc, false);
-                
-                if (bestfeatures) {
-                    al.add(f.toStringBestAttributes());
-                } else {
-                    al.add(f.toStringAllAttributes());
+                Features f;                
+                try {
+                    f = new Features(mirna, prec, struc, true);
+                    if (bestfeatures) {
+                        al.add(f.toStringBestAttributes());
+                    } else {
+                        al.add(f.toStringAllAttributes());
+                    }
+                    
+                    mirna = mirnaNegativeData(mirna, prec, struc, alobj); //generate new mirna
+                    f = new Features(mirna, prec, struc, false);
+                    
+                    if (bestfeatures) {
+                        al.add(f.toStringBestAttributes());
+                    } else {
+                        al.add(f.toStringAllAttributes());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Bad hairpin at "+o.toString());
+                    f=new Features();
+                    al.add(f.toStringError());
                 }
                 
                 cpt++;
@@ -84,8 +89,8 @@ public class AdaptDataForWeka {
                     System.out.print("*");
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
-                System.err.println("Error at: "+o.toString());
+                e.printStackTrace();
+                
             }
         }  
         return al;
@@ -153,7 +158,7 @@ public class AdaptDataForWeka {
                         try {
                             struc = tab[3];
                         } catch (Exception e) {
-                            struc=RNAfold.GetSecondaryStructure(prec);
+                            struc=Vienna.GetSecondaryStructure(prec);
                             pw.println(idName+"\t"+mirna_or+"\t"+prec+"\t"+struc);
                             folded=true;
                         }
@@ -172,7 +177,7 @@ public class AdaptDataForWeka {
                                 al.add(f.toStringAllAttributes());
                             }
                         } catch (Exception e) {
-                            System.err.println("error at (probably bad hairpin) "+line);
+                            System.err.println("Bad hairpin at "+line);
                             f=new Features();
                             al.add(f.toStringError());
                         }
@@ -305,7 +310,7 @@ public class AdaptDataForWeka {
                 + "@attribute id string"+ "\n"
                 
                 + "@attribute length real"+ "\n"
-                + "@attribute mfe real"+ "\n"
+//                + "@attribute mfe real"+ "\n" //RNAcofold calculate it
                 + "@attribute GCperc real"+ "\n"
                 + "@attribute MaximumLengthWithoutBulges real"+ "\n"
                 + "@attribute MaximumLengthWithoutBulgesPerc real"+ "\n"
@@ -418,6 +423,29 @@ public class AdaptDataForWeka {
 //                + "@attribute nucleotideAtEndPlus2 { A, U, G, C, N}"+ "\n"
 //                + "@attribute nucleotideAtEndPlus3 { A, U, G, C, N}"+ "\n"
                 
+                + "@attribute RNAcofoldMfe real"+"\n"
+                + "@attribute RNAcofoldMfeEnsemble real"+"\n"
+                + "@attribute RNAcofoldFrequency real"+"\n"
+                + "@attribute RNAcofoldDeltaG real"+"\n"
+                + "@attribute RNAcofoldAB real"+"\n"
+                + "@attribute RNAcofoldAA real"+"\n"
+                + "@attribute RNAcofoldBB real"+"\n"
+                + "@attribute RNAcofoldA real"+"\n"
+                + "@attribute RNAcofoldB real"+"\n"
+                + "@attribute BPprobGlobal real"+"\n"
+                + "@attribute BPprobTmpStructure real"+"\n"
+                + "@attribute BPprobFinalStructure real"+"\n"
+                + "@attribute BPprobFinalStructureGC real"+"\n"
+                + "@attribute BPprobFinalStructureGU real"+"\n"
+                + "@attribute BPprobFinalStructureGA real"+"\n"
+                + "@attribute BPprobFinalStructureGG real"+"\n"
+                + "@attribute BPprobFinalStructureCC real"+"\n"
+                + "@attribute BPprobFinalStructureCU real"+"\n"
+                + "@attribute BPprobFinalStructureCA real"+"\n"
+                + "@attribute BPprobFinalStructureAU real"+"\n"
+                + "@attribute BPprobFinalStructureAA real"+"\n"
+                + "@attribute BPprobFinalStructureUU real"+"\n"
+                
                 + "@attribute Class { true, false}"+ "\n"
                 + "@data";
         return s;
@@ -434,7 +462,7 @@ public class AdaptDataForWeka {
                 + "@attribute id string"+ "\n"
                 
 //                + "@attribute length real"+ "\n"
-                + "@attribute mfe real"+ "\n"
+//                + "@attribute mfe real"+ "\n"
 //                + "@attribute GCperc real"+ "\n"
                 + "@attribute MaximumLengthWithoutBulges real"+ "\n"
                 + "@attribute MaximumLengthWithoutBulgesPerc real"+ "\n"

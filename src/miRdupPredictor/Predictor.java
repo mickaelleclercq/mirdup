@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import miRdup.Features;
 import miRdup.Main;
-import miRdup.RNAfold;
+import miRdup.Vienna;
 
 /**
  *
@@ -120,7 +120,7 @@ public class Predictor {
         if (!os.startsWith("win")){
             Main.rnafoldlinux=rnafold;
         } 
-        struct=RNAfold.GetSecondaryStructure(prec);
+        struct=Vienna.GetSecondaryStructure(prec);
         System.out.println(struct);
         
         try {

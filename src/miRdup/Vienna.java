@@ -18,7 +18,7 @@ import java.util.Date;
  *
  * @author Mickael Leclercq
  */
-public class RNAfold {
+public class Vienna {
      
     
     public static String executeRNAmoIP(String sequence, String structure){
@@ -131,6 +131,7 @@ public class RNAfold {
             p.destroy();
         } catch (Exception e) {
             e.printStackTrace();
+            return "0";
         }
         
         return struct.trim();
@@ -187,7 +188,7 @@ public class RNAfold {
         return outfile;
     }     
 
-     public static String GetMfeDuplex(String mirna,String mirnastar){
+     public static String GetMfeDuplexRNAduplex(String mirna,String mirnastar){
         String mfe="";
         String output="";
         try {           
@@ -225,6 +226,44 @@ public class RNAfold {
             return "0";             
         }        
     }
+     
+     
+     public static ViennaObject GetInfosDuplexRNAcofold(String mirna,String mirnastar){
+        ViennaObject vo=new ViennaObject();
+        String output="";
+        try {           
+            if (mirnastar.equals("loop")||mirnastar.equals("error")){
+                vo.error=true;
+                return vo;
+            }
+            String os=System.getProperty("os.name").toLowerCase();
+            String cmd="";
+            if (os.startsWith("win")) {
+                cmd="RNAcofold.exe --noPS -a";
+            } else {
+                cmd=Main.rnafoldlinux+"RNAcofold --noPS -a";
+            }
+            
+            Process p = Runtime.getRuntime().exec(cmd);
+            new PrintWriter(p.getOutputStream(),true).println(mirna+"&"+mirnastar);
+            BufferedReader bri=new BufferedReader(new InputStreamReader(p.getInputStream()));
+            new PrintWriter(p.getOutputStream(),true).println("@");                
+            p.waitFor();
+            String line="";            
+            while (bri.ready()){
+                line=bri.readLine();
+                output+=line+"\n";
+            }
+            bri.close();
+            p.destroy();
+            vo.parseRNAcofold(output);
+            return vo;
+        } catch (Exception e) {
+            vo.error=true;
+            return vo;             
+        }        
+    }
+     
      
      public static String GetMfeDuplexTmp(String mirna,String mirnastar){
         String mfe="";
@@ -265,5 +304,22 @@ public class RNAfold {
             return "0";             
         }        
     }     
+
+    public static boolean checkViennaTools() {
+        //RNAfold
+        
+        if (GetSecondaryStructure("AAAAAAAAAAAUUUUUUUUUUUUUUUUAAAAAAAAAAAAAAUUUUUUUUUUUUUUAAAAAAAA").equals("0")){
+            System.err.println("checking RNAfold... FAIL");
+            return false;
+        }
+        System.out.println("checking RNAfold... OK");
+        //RNAcofold
+        if (GetInfosDuplexRNAcofold("AAAAAAAAAAAAAAAA","UUUUUUUUUUUUUUUU").hasError()){
+            System.err.println("checking RNAcofold... FAIL");
+            return false;
+        }
+        System.out.println("checking RNAcofold... OK");
+        return true;
+    }
      
 }

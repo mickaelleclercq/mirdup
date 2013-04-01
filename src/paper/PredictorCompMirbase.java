@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.TooManyListenersException;
 import miRdup.Features;
 import miRdup.Main;
-import miRdup.RNAfold;
+import miRdup.Vienna;
 import miRdupPredictor.AlignmentObject;
 import miRdupPredictor.AlignmentObject;
 import miRdupPredictor.AlignmentObject;
@@ -230,7 +230,7 @@ public class PredictorCompMirbase {
         if (!os.startsWith("win")){
             Main.rnafoldlinux=rnafold;
         } 
-        struct=RNAfold.GetSecondaryStructure(prec);
+        struct=Vienna.GetSecondaryStructure(prec);
         //System.out.println(prec);
         
         try {

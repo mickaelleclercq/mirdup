@@ -93,13 +93,20 @@ public class Main {
             help();
         }   
         String os=System.getProperty("os.name").toLowerCase();
+        
+        
+        
         if(!os.contains("win")&&rnafoldlinux.isEmpty()){
             System.out.println("You must submit the RNAfold program path (option -r). See help with -help option");        
-        } else if (predictMiRNAFromPrec) {
-            mirdupExecutionPredictor();
-            
         } else {
-            miRdupExecutionEMBL();
+            //check Vienna tools
+            if (!Vienna.checkViennaTools()){
+                System.err.println("Vienna tools cannot be executed");
+            } else if (predictMiRNAFromPrec) {
+                mirdupExecutionPredictor();            
+            } else {
+                miRdupExecutionEMBL();
+            }
         }
         
     }
@@ -169,11 +176,13 @@ public class Main {
             // get arff of training
             if (s.startsWith("a")){
                 arffFileForTrain=s.substring(1).trim();
+                trainFromOnlineMiRbase=false;
             }
             
             // get arff of test
             if (s.startsWith("b")){
                 arffFileForValidate=s.substring(1).trim();
+                trainFromOnlineMiRbase=false;
             }
             
             // get rnafold path

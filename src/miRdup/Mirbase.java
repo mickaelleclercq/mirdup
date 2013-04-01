@@ -117,7 +117,7 @@ public class Mirbase {
                     }                    
                 }
             }
-            System.out.println("Total iterations: "+alobj.size());
+            System.out.println("Total iterations (miRNAs with their corresponding precursor): "+alobj.size());
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,7 +127,7 @@ public class Mirbase {
         
         // print sequences that will be trained
         try {
-            System.out.println("Print requested sequences in "+keyword+".txt");
+            System.out.println("Store requested sequences in "+keyword+".txt");
             PrintWriter pw=new PrintWriter(new FileWriter(keyword+".txt"));
             PrintWriter pw2=new PrintWriter(new FileWriter(keyword+".notExperimental.txt"));
             int exp=0;
@@ -565,7 +565,7 @@ public class Mirbase {
             pw.close();
             
             //read folded sequences
-            File folded = RNAfold.GetSecondaryStructuresFromFile(tmpFile);
+            File folded = Vienna.GetSecondaryStructuresFromFile(tmpFile);
             BufferedReader br = new BufferedReader(new FileReader(folded));
             String line="";
             HashMap <String,String> hm = new HashMap<String, String>();
