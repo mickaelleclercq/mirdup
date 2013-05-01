@@ -1,4 +1,24 @@
 /*
+ *  miRdup v1.0
+ *  Computational prediction of the localization of microRNAs within their pre-miRNA
+ *  
+ *  Copyright (C) 2013  Mickael Leclercq
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * RNAfold executable
  */
 package miRdup;
@@ -264,6 +284,43 @@ public class Vienna {
         }        
     }
      
+     public static ViennaObject GetInfosDuplexRNAcofoldConstraint(String mirna,String mirnastar,String constraint){
+        ViennaObject vo=new ViennaObject();
+        vo.calculateConstraint=false;
+        String output="";
+        try {           
+            if (mirnastar.equals("loop")||mirnastar.equals("error")){
+                vo.error=true;
+                return vo;
+            }
+            String os=System.getProperty("os.name").toLowerCase();
+            String cmd="";
+            if (os.startsWith("win")) {
+                cmd="RNAcofold.exe --noPS -a";
+            } else {
+                cmd=Main.rnafoldlinux+"RNAcofold --noPS -C -a";
+            }
+            
+            Process p = Runtime.getRuntime().exec(cmd);
+            new PrintWriter(p.getOutputStream(),true).println(mirna+"&"+mirnastar);
+            new PrintWriter(p.getOutputStream(),true).println(constraint);
+            BufferedReader bri=new BufferedReader(new InputStreamReader(p.getInputStream()));
+            new PrintWriter(p.getOutputStream(),true).println("@");                
+            p.waitFor();
+            String line="";            
+            while (bri.ready()){
+                line=bri.readLine();
+                output+=line+"\n";
+            }
+            bri.close();
+            p.destroy();
+            vo.parseRNAcofold(output);
+            return vo;
+        } catch (Exception e) {
+            vo.error=true;
+            return vo;             
+        }        
+    }
      
      public static String GetMfeDuplexTmp(String mirna,String mirnastar){
         String mfe="";
@@ -314,11 +371,16 @@ public class Vienna {
         }
         System.out.println("checking RNAfold... OK");
         //RNAcofold
-        if (GetInfosDuplexRNAcofold("AAAAAAAAAAAAAAAA","UUUUUUUUUUUUUUUU").hasError()){
-            System.err.println("checking RNAcofold... FAIL");
+//        if (GetInfosDuplexRNAcofold("AAAAAAAAAAAAAAAA","UUUUUUUUUUUUUUUU").hasError()){
+//            System.err.println("checking RNAcofold... FAIL");
+//            return false;
+//        }
+        //RNAduplex
+        if (GetMfeDuplexRNAduplex("AAAAAAAAAAAAAAAA","UUUUUUUUUUUUUUUU").equals("0")){
+            System.err.println("checking RNAduplex... FAIL");
             return false;
         }
-        System.out.println("checking RNAcofold... OK");
+        System.out.println("checking RNAduplex... OK");
         return true;
     }
      

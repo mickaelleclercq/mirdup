@@ -1,4 +1,24 @@
 /*
+ *  miRdup v1.0
+ *  Computational prediction of the localization of microRNAs within their pre-miRNA
+ *  
+ *  Copyright (C) 2013  Mickael Leclercq
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * Get features from mirnas, precursors and structures
  */
 package miRdup;
@@ -72,6 +92,31 @@ public final class Features {
         }
         double perc=(gc*100)/l;
         return perc;
+    }
+
+    //Maximum length on the miRNA without bulges
+    public  double getGCpercNormalized(){
+        int l = mirna.length();
+        int gcmirna=0;
+        for (int i = 0; i < l; i++) {
+            if (mirna.charAt(i)=='C'||mirna.charAt(i)=='G'){
+                gcmirna++;
+            }
+        }
+        double percMirna=(gcmirna*100)/l;
+        
+        l = prec.length();
+        int gcprec=0;
+        for (int i = 0; i < l; i++) {
+            if (prec.charAt(i)=='C'||prec.charAt(i)=='G'){
+                gcprec++;
+            }
+        }
+        double percPrec=(gcprec*100)/l;
+        
+        double norm=percMirna/percPrec;
+        
+        return norm;
     }
     
     //Maximum length on the miRNA without bulges
@@ -617,7 +662,7 @@ public final class Features {
     
     
        // Pairs AU, GC, GU
-    public String getPercOfbasedpairs(){
+    public String getPercOfbasepairs(){
         
         try {
             if (getMirnaIncludedInLoop()) {
@@ -710,10 +755,47 @@ public final class Features {
         } catch (Exception e) {
 //            return "0.0,0.0,0.0";
             return "?,?,?";
-        }
-        
+        }        
     }
     
+       // Pairs AU, GC, GU norm
+    public String getPercOfbasepairsNormalized(){
+        String basePairs=getPercOfbasepairs();
+        if (basePairs.equals("0.0,0.0,0.0")){
+            return "0.0,0.0,0.0";
+        }        
+        try {
+            double AUnom=Double.valueOf(basePairs.split(",")[0]);
+            double GCnom=Double.valueOf(basePairs.split(",")[0]);
+            double GUnom=Double.valueOf(basePairs.split(",")[0]);
+            
+            double AUden=((getNucleotideNumber(prec, 'A')*getNucleotideNumber(prec, 'U'))/prec.length())*mirna.length();
+            double GCden=((getNucleotideNumber(prec, 'G')*getNucleotideNumber(prec, 'C'))/prec.length())*mirna.length();
+            double GUden=((getNucleotideNumber(prec, 'G')*getNucleotideNumber(prec, 'U'))/prec.length())*mirna.length();
+            
+            double AUnorm=AUnom/AUden;
+            double GCnorm=GCnom/GCden;
+            double GUnorm=GUnom/GUden;
+            
+            return df.format(AUnorm).replace(",", ".")+","
+                    + df.format(GCnorm).replace(",", ".")+","
+                    + df.format(GUnorm).replace(",", ".");
+        } catch (Exception e) {
+            return "?,?,?";
+        }
+        
+    }   
+    
+    public double getNucleotideNumber(String sequence, char nt){
+        double count=0;
+        for (int i = 0; i < sequence.length(); i++) {
+            if (sequence.charAt(i)==nt){
+                count++;
+            }            
+        }
+        return count;
+    }
+            
        // Pairs AU, GC
     public String getPercOfbasedpairsBestFeatures(){
         
@@ -1448,39 +1530,36 @@ public final class Features {
     public Character getNtAtStartPlus1(){
         return control(mirna.charAt(1));
     }
-//    public Character getNtAtStartPlus2(){
-//        return control(mirna.charAt(2));
-//    }
-//    public Character getNtAtStartPlus3(){
-//        return control(mirna.charAt(3));
-//    }
+    public Character getNtAtStartPlus2(){
+        return control(mirna.charAt(2));
+    }
+    public Character getNtAtStartPlus3(){
+        return control(mirna.charAt(3));
+    }
     public Character getNtAtStartMinus1(){
         int mirnaStart=prec.indexOf(mirna);        
         try {
             return control(prec.charAt(mirnaStart - 1));
         } catch (Exception e) {
-//            return control(mirna.charAt(0));
             return control('?');
         }
     }
-//    public Character getNtAtStartMinus2(){
-//        int mirnaStart=prec.indexOf(mirna);        
-//        try {
-//            return control(prec.charAt(mirnaStart - 2));
-//        } catch (Exception e) {
-////            return control(mirna.charAt(0));
-//            return control('?');
-//        }
-//    }
-//    public Character getNtAtStartMinus3(){
-//        int mirnaStart=prec.indexOf(mirna);        
-//        try {
-//            return control(prec.charAt(mirnaStart - 3));
-//        } catch (Exception e) {
-////            return control(mirna.charAt(0));
-//            return control('?');
-//        }
-//    }
+    public Character getNtAtStartMinus2(){
+        int mirnaStart=prec.indexOf(mirna);        
+        try {
+            return control(prec.charAt(mirnaStart - 2));
+        } catch (Exception e) {
+            return control('?');
+        }
+    }
+    public Character getNtAtStartMinus3(){
+        int mirnaStart=prec.indexOf(mirna);        
+        try {
+            return control(prec.charAt(mirnaStart - 3));
+        } catch (Exception e) {
+            return control('?');
+        }
+    }
 
             
     public Character getNtAtEnd0(){
@@ -1492,37 +1571,34 @@ public final class Features {
         try {
             return control(prec.charAt(mirnaEnd));
         } catch (Exception e) {
-            //return control(mirna.charAt(mirna.length()-1));
             return control('?');
         }
     }
-//    public Character getNtAtEndPlus2(){
-//        int mirnaEnd=prec.indexOf(mirna)+mirna.length()+1;
-//        try {
-//            return control(prec.charAt(mirnaEnd));
-//        } catch (Exception e) {
-//            //return control(mirna.charAt(mirna.length()-1));
-//            return control('?');
-//        }
-//    }
-//    public Character getNtAtEndPlus3(){
-//        int mirnaEnd=prec.indexOf(mirna)+mirna.length()+2;
-//        try {
-//            return control(prec.charAt(mirnaEnd));
-//        } catch (Exception e) {
-//            //return control(mirna.charAt(mirna.length()-1));
-//            return control('?');
-//        }
-//    }    
+    public Character getNtAtEndPlus2(){
+        int mirnaEnd=prec.indexOf(mirna)+mirna.length()+1;
+        try {
+            return control(prec.charAt(mirnaEnd));
+        } catch (Exception e) {
+            return control('?');
+        }
+    }
+    public Character getNtAtEndPlus3(){
+        int mirnaEnd=prec.indexOf(mirna)+mirna.length()+2;
+        try {
+            return control(prec.charAt(mirnaEnd));
+        } catch (Exception e) {
+            return control('?');
+        }
+    }    
     public Character getNtAtEndMinus1(){
         return control(mirna.charAt(mirna.length()-2));
     }
-//    public Character getNtAtEndMinus2(){
-//        return control(mirna.charAt(mirna.length()-3));
-//    }
-//    public Character getNtAtEndMinus3(){
-//        return control(mirna.charAt(mirna.length()-4));
-//    }
+    public Character getNtAtEndMinus2(){
+        return control(mirna.charAt(mirna.length()-3));
+    }
+    public Character getNtAtEndMinus3(){
+        return control(mirna.charAt(mirna.length()-4));
+    }
     
     public static String getID(){
         int i = AdaptDataForWeka.id++;
@@ -1545,7 +1621,11 @@ public final class Features {
     }
     
     public String toStringError(){
-        String features=getID()+",0,0,0,0,0,0,false,0,false,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0.0,0.0,0.0,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0.0,A,A,A,A,A,A,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,false";
+        //127
+        //String features=getID()+",0,0,0,0,0,0,0,false,0,false,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0.0,0.0,0.0,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,0.0,N,N,N,N,N,N,N,N,N,N,N,N,N,N,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,false";
+        //100
+        String features=getID()+",0,0,0,0,0,0,0,false,0,false,0,false,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0,0.0,0.0,0.0,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0,0.0,N,N,N,N,N,N,false";
+
         return features;
     }
     
@@ -1555,8 +1635,9 @@ public final class Features {
             features = ""
                     + getID() + ","
                     + getLength() + ","
-//                    + getMFE() + ","
+                    + getMFE() + ","
                     + df.format(getGCperc()).replace(",", ".") + ","
+//                    + df.format(getGCpercNormalized()).replace(",", ".") + ","                    
                     + getMaximumLengthWithoutBulges() + ","
                     + df.format(getMaximumLengthWithoutBulgesPerc()).replace(",", ".") + ","
                     + getStartLengthWithoutBulges() + ","
@@ -1618,7 +1699,8 @@ public final class Features {
                     + getLenghtOfBiggestBulge() + ","
                     + df.format(getLengthBiggestBulgesPerc()).replace(",", ".") + ","
                     + getAllTriplets()+ ","
-                    + getPercOfbasedpairs()+","
+                    + getPercOfbasepairs()+","
+//                    + getPercOfbasepairsNormalized()+","
                     
                     + getNtAtStart0()+ ","
                     + getNtAtStartMinus1()+ ","
@@ -1634,13 +1716,13 @@ public final class Features {
                     + getNtAtEndPlus1()+ ","
 //                    + getNtAtEndPlus2()+ ","
 //                    + getNtAtEndPlus3()+ ","
-                    + getCoFoldInfos()+","
+//                    + getCoFoldInfos()+","
                     + positive;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(mirna+" "+prec+" "+precStruc);
         }
-        return features;
+        return features.replace("\uFFFD", "?").replace("�", "");
     }
     
     public String toStringBestAttributes(){
@@ -1712,7 +1794,7 @@ public final class Features {
                     + getLenghtOfBiggestBulge() + ","
                     + df.format(getLengthBiggestBulgesPerc()).replace(",", ".") + ","
                     + getBestTriplets()+ ","
-                    + getPercOfbasedpairs()+","
+                    + getPercOfbasepairs()+","
 //                    
 //                    + getNtAtStart0()+ ","
 //                    + getNtAtStartMinus1()+ ","

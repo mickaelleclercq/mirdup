@@ -1,10 +1,33 @@
 /*
+ *  miRdup v1.0
+ *  Computational prediction of the localization of microRNAs within their pre-miRNA
+ *  
+ *  Copyright (C) 2013  Mickael Leclercq
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * Object holding Vienna package tools informations
  */
 package miRdup;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -28,26 +51,32 @@ public class ViennaObject {
     
     public Double BPprobGlobal=0.0; // sum of probabilities of ALL possible pairs
     public Double BPprobTmpStructure=0.0; // sum of probabilities of possible pairs
+    public HashMap<Integer,Double[]> hmBPprobTmpStructure= new HashMap<Integer,Double[]>();
     public Double BPprobFinalStructure=0.0; // sum of probabilities of the final structure
-    
+    public ArrayList<Double[]> alBPprobFinalStructure= new ArrayList<Double[]>();
+    public double BPprobEnsemblizedBulges;
+    public double ComplexBoltzmannProbability;
+     
     public Double BPprobFinalStructureGC=0.0; //canonical
     public Double BPprobFinalStructureGU=0.0; //canonical
-    public Double BPprobFinalStructureGA=0.0;
-    public Double BPprobFinalStructureGG=0.0;
+    public Double BPprobFinalStructureAU=0.0; //canonical
     
+    //non canonical (USELESS, never happen)
+    public Double BPprobFinalStructureGA=0.0;
+    public Double BPprobFinalStructureGG=0.0;    
     public Double BPprobFinalStructureCC=0.0;
     public Double BPprobFinalStructureCU=0.0;
     public Double BPprobFinalStructureCA=0.0;
-    
-    public Double BPprobFinalStructureAU=0.0; //canonical
-    public Double BPprobFinalStructureAA=0.0;
-    
+    public Double BPprobFinalStructureAA=0.0;    
     public Double BPprobFinalStructureUU=0.0;
     
     public Boolean error=false;
+    public boolean calculateConstraint=true;
+    public static DecimalFormat df = new DecimalFormat ( ) ;
     
 
     public void parseRNAcofold(String output) {
+        df.setMaximumFractionDigits(3);
         String tab[]= output.split("\n");
         mirna5p=tab[0].split("&")[0];
         mirna3p=tab[0].split("&")[1];
@@ -104,27 +133,29 @@ public class ViennaObject {
     public String toStringRNAcofold(){
         String s = ""
                 + RNAcofoldMfe+","
-                + RNAcofoldMfeEnsemble+","
-                + RNAcofoldFrequency+","
-                + RNAcofoldDeltaG+","
-                + RNAcofoldAB+","
-                + RNAcofoldAA+","
-                + RNAcofoldBB+","
-                + RNAcofoldA+","
-                + RNAcofoldB+","
-                + BPprobGlobal+","
-                + BPprobTmpStructure+","
-                + BPprobFinalStructure+","
-                + BPprobFinalStructureGC+","
-                + BPprobFinalStructureGU+","
-                + BPprobFinalStructureGA+","
-                + BPprobFinalStructureGG+","
-                + BPprobFinalStructureCC+","
-                + BPprobFinalStructureCU+","
-                + BPprobFinalStructureCA+","
-                + BPprobFinalStructureAU+","
-                + BPprobFinalStructureAA+","
-                + BPprobFinalStructureUU+""
+                //+ RNAcofoldMfeEnsemble+"," //useless, same as AB
+                + df.format(Double.valueOf(RNAcofoldFrequency))+","
+                + df.format(Double.valueOf(RNAcofoldDeltaG))+","
+                + df.format(Double.valueOf(RNAcofoldAB))+","
+                + df.format(Double.valueOf(RNAcofoldAA))+","
+                + df.format(Double.valueOf(RNAcofoldBB))+","
+                + df.format(Double.valueOf(RNAcofoldA))+","
+                + df.format(Double.valueOf(RNAcofoldB))+","
+                + df.format(Double.valueOf(BPprobGlobal))+","
+                + df.format(Double.valueOf(BPprobTmpStructure))+","
+                + df.format(Double.valueOf(BPprobFinalStructure))+","
+                + df.format(Double.valueOf(BPprobEnsemblizedBulges))+","
+                + df.format(Double.valueOf(ComplexBoltzmannProbability))+","
+                + df.format(Double.valueOf(BPprobFinalStructureGC))+","
+                + df.format(Double.valueOf(BPprobFinalStructureGU))+","
+                + df.format(Double.valueOf(BPprobFinalStructureAU))+""
+//                + BPprobFinalStructureGG+","
+//                + BPprobFinalStructureCC+","
+//                + BPprobFinalStructureCU+","
+//                + BPprobFinalStructureCA+","
+//                + BPprobFinalStructureAU+","
+//                + BPprobFinalStructureGA+","
+//                + BPprobFinalStructureUU+""
                 ;
         return s;        
     }
@@ -132,33 +163,34 @@ public class ViennaObject {
     
     public String toStringError() {
         String s = ""
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
-                + "0"+"\t"
+                + "0"+","
+                //+ "0"+","
+                + "0"+","
+                + "0"+","
+                + "0"+","
+                + "0"+","
+                + "0"+","
+                + "0"+","
+                + "0"+","
                 
-                + "0.0"+"\t"
-                + "0.0"+"\t"
-                + "0.0"+"\t"
+                + "0.0"+","
+                + "0.0"+","
+                + "0.0"+","
+                + "0.0"+","
+                + "0.0"+","
                 
-                + "0.0"+"\t"
-                + "0.0"+"\t"
-                + "0.0"+"\t"
-                + "0.0"+"\t"
+                + "0.0"+","
+                + "0.0"+","
+                + "0.0"+""
                 
-                + "0.0"+"\t"
-                + "0.0"+"\t"
-                + "0.0"+"\t"
-                
-                + "0.0"+"\t"
-                + "0.0"+"\t"
-                
-                + "0.0"
+//                + "0.0"+"\t"
+//                + "0.0"+"\t"                
+//                + "0.0"+"\t"
+//                + "0.0"+"\t"
+//                + "0.0"+"\t"                
+//                + "0.0"+"\t"
+//                + "0.0"+"\t"                
+//                + "0.0"
                 
                 + "";
         return s;
@@ -197,6 +229,8 @@ public class ViennaObject {
                 int actual5pnt=Integer.valueOf(tab[0])-1;
                 int nucleotide3p=Integer.valueOf(tab[1])-1;
                 double score=Double.valueOf(tab[2]);
+                Double content[]= {Double.valueOf(actual5pnt),Double.valueOf(nucleotide3p),score};
+                
                 if (actual5pnt<nucleotide5p){
                     finalProbs=true;
                 }
@@ -208,13 +242,75 @@ public class ViennaObject {
                 BPprobGlobal+=score;
                 if (finalProbs){
                     BPprobFinalStructure+=score;                    
-                    
+                    alBPprobFinalStructure.add(content);
                 }else {
                     BPprobTmpStructure+=score;
+                    hmBPprobTmpStructure.put(actual5pnt,content);
+                    ComplexBoltzmannProbability+=-Math.exp(-score/(8.3144621*37));
                 }
                 
                 line=br.readLine();                
             }
+            br.close();
+            
+            //ensemblized bulges at +4 and -4
+            int numberOfUnpairedBases=0;
+            double SumUnpairedBasesAroundBulges=0;
+            for (int i = 0; i < alBPprobFinalStructure.size(); i++) {
+                if (alBPprobFinalStructure.get(i)[0]!=i){  
+                    numberOfUnpairedBases++;
+                    for (int j = i-4; j <= i+4; j++) {
+                        try {
+
+                            SumUnpairedBasesAroundBulges+=hmBPprobTmpStructure.get(j)[2];
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            }
+            BPprobEnsemblizedBulges=SumUnpairedBasesAroundBulges/numberOfUnpairedBases;
+            
+            
+            // ComplexBoltzmannProbability
+            if (calculateConstraint) {
+                String constraint = "";
+                if (mirna5p.length() == mirna3p.length()) {
+                    for (int i = 0; i < mirna5p.length(); i++) {
+                        constraint += "(";
+                    }
+                    constraint += "&";
+                    for (int i = 0; i < mirna3p.length(); i++) {
+                        constraint += ")";
+                    }
+                } else if (mirna5p.length() < mirna3p.length()) {
+                    for (int i = 0; i < mirna5p.length(); i++) {
+                        constraint += "(";
+                    }
+                    constraint += "&";
+                    for (int i = 0; i < mirna5p.length(); i++) {
+                        constraint += ")";
+                    }
+                    for (int i = 0; i < mirna5p.length() - mirna5p.length(); i++) {
+                        constraint += ".";
+                    }
+                } else {
+                    for (int i = 0; i < mirna5p.length() - mirna3p.length(); i++) {
+                        constraint += ".";
+                    }
+                    for (int i = 0; i < mirna3p.length(); i++) {
+                        constraint += "(";
+                    }
+                    constraint += "&";
+                    for (int i = 0; i < mirna3p.length(); i++) {
+                        constraint += ")";
+                    }
+                    
+                }
+                
+                double Q = Vienna.GetInfosDuplexRNAcofoldConstraint(mirna5p, mirna3p, constraint).ComplexBoltzmannProbability;
+                ComplexBoltzmannProbability = ComplexBoltzmannProbability / Q;
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -242,16 +338,16 @@ public class ViennaObject {
         if ((fiveP=='C'&&threeP=='U')||(fiveP=='U'&&threeP=='C')){
             BPprobFinalStructureCU+=score;
         }
-        if ((fiveP=='G'&&threeP=='G')||(fiveP=='G'&&threeP=='G')){
+        if ((fiveP=='G'&&threeP=='G')){
             BPprobFinalStructureGG+=score;
         }
-        if ((fiveP=='C'&&threeP=='C')||(fiveP=='C'&&threeP=='C')){
+        if ((fiveP=='C'&&threeP=='C')){
             BPprobFinalStructureCC+=score;
         }
-        if ((fiveP=='A'&&threeP=='A')||(fiveP=='A'&&threeP=='A')){
+        if ((fiveP=='A'&&threeP=='A')){
             BPprobFinalStructureAA+=score;
         }
-        if ((fiveP=='U'&&threeP=='U')||(fiveP=='U'&&threeP=='U')){
+        if ((fiveP=='U'&&threeP=='U')){
             BPprobFinalStructureUU+=score;
         }
 

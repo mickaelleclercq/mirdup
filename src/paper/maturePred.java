@@ -34,16 +34,34 @@ import miRdup.Features;
  *
  * @author fyrox
  */
-public class miRalign {
-    
-    public static void main(String[] args) {
+public class maturePred {
+    public static boolean randomlines=true;
         
-        String infile = "all.txt"; 
-        String outputdiffs="predictor"+File.separator+"all.miRalign.diffs.txt";
-        String outputPredictions="predictor"+File.separator+"all.miRalign.pred.txt";
+    public static void main(String[] args) {
+        int num=10;
+        String folder="predictor"+File.separator+"maturepred"+File.separator;
+        String organisms="organisms.txt";
+        String infile = folder+"all"+num+".txt"; 
+        System.out.println(infile);
+        String outputdiffs=folder+"all.maturepred.diffs."+num+".txt";
+        String outputPredictions=folder+"all.maturepred.pred."+num+".txt";
 //        String infile=args[0];  
 //        String outfile=args[1];
         
+        //Add organisms to HashMap
+        HashMap<String,String> hmorg= new HashMap<String, String>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(organisms));
+            String line="";
+            while(br.ready()){
+                line=br.readLine();
+                hmorg.put(line.split("\t")[0], line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        //maturepred
         ArrayList<Integer> diffStarts= new ArrayList<Integer>();        
         ArrayList<Integer> diffEnds= new ArrayList<Integer>();
         
@@ -61,36 +79,59 @@ public class miRalign {
                 try {
                     cpt++;
                     line = br.readLine();
+                    
+                    if (randomlines){
+                        int randomNum = 1 + (int)(Math.random()*100);
+                        for (int i = 0; i < randomNum; i++) {
+                            line = br.readLine();                            
+                        }
+                    }
+                    
                     //System.out.println(line);
                     String mirnaName = line.split("\t")[0];
+                    String org=mirnaName.split("-")[0];
                     String precName = line.split("\t")[1];
                     String knownMirna = line.split("\t")[2];
                     System.out.print(mirnaName+"\t");
                     String prec = line.split("\t")[3];
-                    
+                    String structure = line.split("\t")[4];
                     //execute miRalign and get start and end position of the predicted miRNA
                     int diffStartFromMiRNA ;
                     int diffendFromMiRNA ;
                     int diffStartFromMiRNAStar = 0;
                     int diffendFromMiRNAStar = 0;
                     String predictedMiRNA;
-                    String structure = null;
                     boolean mirnastar = false;
                     try {
                         Map<String, String> data = new HashMap<String, String>();
-                        data.put("sequence", prec);
-                        data.put("type", "1");
-                        data.put("delta", "15");
-                        data.put("min_seq_sim", "30");
-                        data.put("MFE", "20");
-                        String results = executeMaturePred(data);
-                        String code = getCode(results);
-
-                        int startPosition = code.split("\n")[5].indexOf("*");
-                        int endPosition = code.split("\n")[5].lastIndexOf("*");
-                        structure = code.split("\n")[7];
-                        structure=structure.substring(0, structure.lastIndexOf("(")-1);
-                        predictedMiRNA=code.split("\n")[6].substring(startPosition, endPosition);
+                        boolean plant=false;
+                        int size=22;
+                        if (hmorg.get(org).contains("Viridiplantae")){
+                            plant=true;
+                            size=21;
+                        }
+                        if (plant){
+                            data.put("trainmodel", "plant");
+                            data.put("len", "21");
+                        } else {
+                            data.put("trainmodel", "animal");
+                            data.put("len", "22");
+                        }                        
+                        data.put("ex", "blank");
+                        data.put("seq", ">seq\n"+prec);
+                        int startPosition=0;
+                        int count=0;
+                        do {                            
+                            count++;
+                            startPosition = submit(data)-1;
+                            if (startPosition==999){
+                                System.err.println("err");
+                            }
+                                
+                        } while (startPosition==999&&count<=5);
+                        
+                        int endPosition = startPosition+size;
+                        predictedMiRNA=prec.substring(startPosition, endPosition);
                         
 
                         // get difference from known miRNA
@@ -116,6 +157,7 @@ public class miRalign {
                         }
                         
                     } catch (Exception e) {
+                        e.printStackTrace();
                         predictedMiRNA="null";
                         diffStartFromMiRNA=100;
                         diffendFromMiRNA=100;
@@ -194,123 +236,59 @@ public class miRalign {
         }
     }
     
-    private static String executeMiRalign(String konwnMirna, String prec) {
-        //execute miRalign and get start and end position of the predicted miRNA
-        try {
-            Map<String, String> data = new HashMap<String, String>();
-            data.put("sequence", prec);
-            data.put("type", "1");
-            data.put("delta", "15");
-            data.put("min_seq_sim", "30");
-            data.put("MFE", "20");
-            String results = executeMaturePred(data);
-            String code = getCode(results);
-            
-            int startPosition = code.split("\n")[5].indexOf("*");
-            int endPosition = code.split("\n")[5].lastIndexOf("*");
-
-            String miRNA=code.split("\n")[6].substring(startPosition, endPosition);
-            System.out.println(miRNA);
-            
-            // get difference from known miRNA
-            int startOfKnownMiRNA = prec.indexOf(konwnMirna);
-            int endOfKnownMiRNA = prec.indexOf(konwnMirna) + konwnMirna.length();
-            
-            int diffStart = Math.abs(startPosition - startOfKnownMiRNA);
-            int diffend = Math.abs(endPosition - endOfKnownMiRNA);
-            
-            return diffStart + "," + diffend;
-        } catch (Exception e) {
-            return 100 + "," + 100;
-        }
-    }
-    
-    
-    
-    public static void exemple(){
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("sequence", "ccagccugcugaagcucagagggcucugauucagaaagaucaucggauccgucugagcuuggcuggucgg");
-        data.put("type", "1");
-        data.put("delta", "15");
-        data.put("min_seq_sim", "30");
-        data.put("MFE", "20");
-        String results=executeMaturePred(data);
-        String code = getCode(results);
-        int mirnastart=code.split("\n")[5].indexOf("*");
-        int mirnaend=code.split("\n")[5].lastIndexOf("*");
-        String miRNA=code.split("\n")[6].substring(mirnastart, mirnaend);
-        System.out.println(miRNA);
-    }
-    
     /**
      * get link to results
      * @param data
      * @return 
      */
-    public static String executeMaturePred(Map<String, String> data) {
-        String link="";
+    public static int submit(Map<String, String> data) {
+        String mirna="";
+        int mirnaStart = 1000;
 	try{
-            URL siteUrl = new URL("http://bioinfo.au.tsinghua.edu.cn/miralign/predict.php");
+            URL siteUrl = new URL("http://nclab.hit.edu.cn/maturepred/predict.php");
 
             HttpURLConnection conn = (HttpURLConnection) siteUrl.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setDoInput(true);
-
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+            
             DataOutputStream out = new DataOutputStream(conn.getOutputStream());
 
             Set keys = data.keySet();
             Iterator keyIter = keys.iterator();
             String content = "";
             for(int i=0; keyIter.hasNext(); i++) {
-                    Object key = keyIter.next();
-                    if(i!=0) {
-                            content += "&";
-                    }
-                    content += key + "=" + URLEncoder.encode(data.get(key), "UTF-8");
-            }
+                Object key = keyIter.next();
+                if(i!=0) {
+                        content += "&";
+                }
+                content += key + "=" + URLEncoder.encode(data.get(key), "UTF-8");
+            }            
+            content=content.replace("%0", "%0D%0");
             out.writeBytes(content);
             out.flush();
             out.close();
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             while((line=in.readLine())!=null) {
-                if (line.contains("result")){
-                    link=line.substring(line.indexOf(".")+1,line.indexOf(">"));
-                }                    
+                if (line.contains("id=\"mature\"")){
+                    mirna=line.substring(line.indexOf("id=\"mature\" >")+13);
+                    mirna=mirna.substring(0,mirna.indexOf("<"));
+                } 
+                if (line.contains("big_num")){
+                    String tmp=line.substring(line.indexOf("class=\"big_num\">Mature")+38);
+                    mirnaStart=Integer.valueOf(tmp.substring(0,tmp.indexOf("<")));
+                }
             }
             in.close();   
 	} catch(Exception e){
              e.printStackTrace();       
         }
-        return "http://bioinfo.au.tsinghua.edu.cn/miralign"+link;
+        return mirnaStart;
     }
-    
-        /**
-     * Get HTML code from an url
-     * @param link
-     * @return 
-     */
-    public static String getCode (String link) {
-        String sourceCode = null;
-        try {
-            URL url = new URL(link);
-            URLConnection uc = url.openConnection();
-            InputStream in = uc.getInputStream();
-            int c = in.read();
-            StringBuilder build = new StringBuilder();
-            while (c != -1) {
-                build.append((char) c);
-                c = in.read();
-            }
-            sourceCode = build.toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sourceCode;
-    }
+   
 
 
 }

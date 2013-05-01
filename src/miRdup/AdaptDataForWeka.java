@@ -1,4 +1,24 @@
 /*
+ *  miRdup v1.0
+ *  Computational prediction of the localization of microRNAs within their pre-miRNA
+ *  
+ *  Copyright (C) 2013  Mickael Leclercq
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * Adapt data for weka
  */
 package miRdup;
@@ -310,8 +330,9 @@ public class AdaptDataForWeka {
                 + "@attribute id string"+ "\n"
                 
                 + "@attribute length real"+ "\n"
-//                + "@attribute mfe real"+ "\n" //RNAcofold calculate it
+                + "@attribute mfe real"+ "\n" //RNAcofold calculate it
                 + "@attribute GCperc real"+ "\n"
+//                + "@attribute GCpercNormalized real"+ "\n"
                 + "@attribute MaximumLengthWithoutBulges real"+ "\n"
                 + "@attribute MaximumLengthWithoutBulgesPerc real"+ "\n"
                 + "@attribute StartLengthWithoutBulges real"+ "\n"
@@ -407,6 +428,9 @@ public class AdaptDataForWeka {
                 + "@attribute PercBasedPairAU real"+ "\n"
                 + "@attribute PercBasedPairGC real"+ "\n"
                 + "@attribute PercBasedPairGU real"+ "\n"
+//                + "@attribute PercBasedPairAUnorm real"+ "\n"
+//                + "@attribute PercBasedPairGCnorm real"+ "\n"
+//                + "@attribute PercBasedPairGUnorm real"+ "\n"
                 
                 + "@attribute nucleotideAt0 { A, U, G, C, N}"+ "\n"
                 + "@attribute nucleotideAtMinus1 { A, U, G, C, N}"+ "\n"
@@ -423,28 +447,30 @@ public class AdaptDataForWeka {
 //                + "@attribute nucleotideAtEndPlus2 { A, U, G, C, N}"+ "\n"
 //                + "@attribute nucleotideAtEndPlus3 { A, U, G, C, N}"+ "\n"
                 
-                + "@attribute RNAcofoldMfe real"+"\n"
-                + "@attribute RNAcofoldMfeEnsemble real"+"\n"
-                + "@attribute RNAcofoldFrequency real"+"\n"
-                + "@attribute RNAcofoldDeltaG real"+"\n"
-                + "@attribute RNAcofoldAB real"+"\n"
-                + "@attribute RNAcofoldAA real"+"\n"
-                + "@attribute RNAcofoldBB real"+"\n"
-                + "@attribute RNAcofoldA real"+"\n"
-                + "@attribute RNAcofoldB real"+"\n"
-                + "@attribute BPprobGlobal real"+"\n"
-                + "@attribute BPprobTmpStructure real"+"\n"
-                + "@attribute BPprobFinalStructure real"+"\n"
-                + "@attribute BPprobFinalStructureGC real"+"\n"
-                + "@attribute BPprobFinalStructureGU real"+"\n"
-                + "@attribute BPprobFinalStructureGA real"+"\n"
-                + "@attribute BPprobFinalStructureGG real"+"\n"
-                + "@attribute BPprobFinalStructureCC real"+"\n"
-                + "@attribute BPprobFinalStructureCU real"+"\n"
-                + "@attribute BPprobFinalStructureCA real"+"\n"
-                + "@attribute BPprobFinalStructureAU real"+"\n"
-                + "@attribute BPprobFinalStructureAA real"+"\n"
-                + "@attribute BPprobFinalStructureUU real"+"\n"
+//                + "@attribute RNAcofoldMfe real"+"\n"
+//                + "@attribute RNAcofoldFrequency real"+"\n"
+//                + "@attribute RNAcofoldDeltaG real"+"\n"
+//                + "@attribute RNAcofoldAB real"+"\n"
+//                + "@attribute RNAcofoldAA real"+"\n"
+//                + "@attribute RNAcofoldBB real"+"\n"
+//                + "@attribute RNAcofoldA real"+"\n"
+//                + "@attribute RNAcofoldB real"+"\n"
+//                + "@attribute BPprobGlobal real"+"\n"
+//                + "@attribute BPprobTmpStructure real"+"\n"
+//                + "@attribute BPprobFinalStructure real"+"\n"
+//                + "@attribute BPprobEnsemblizedBulges real"+"\n"    
+//                + "@attribute ComplexBoltzmannProbability real"+"\n"
+                
+//                + "@attribute BPprobFinalStructureGC real"+"\n"
+//                + "@attribute BPprobFinalStructureGU real"+"\n"
+//                + "@attribute BPprobFinalStructureAU real"+"\n"
+//                + "@attribute BPprobFinalStructureGG real"+"\n"
+//                + "@attribute BPprobFinalStructureCC real"+"\n"
+//                + "@attribute BPprobFinalStructureCU real"+"\n"
+//                + "@attribute BPprobFinalStructureCA real"+"\n"
+//                + "@attribute BPprobFinalStructureGA real"+"\n"
+//                + "@attribute BPprobFinalStructureAA real"+"\n"
+//                + "@attribute BPprobFinalStructureUU real"+"\n"
                 
                 + "@attribute Class { true, false}"+ "\n"
                 + "@data";

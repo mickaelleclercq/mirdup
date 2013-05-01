@@ -1,4 +1,24 @@
 /*
+ *  miRdup v1.0
+ *  Computational prediction of the localization of microRNAs within their pre-miRNA
+ *  
+ *  Copyright (C) 2013  Mickael Leclercq
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * from conserved miRNAs in mirbase after mirdeep2, find their genomic location
  */
 package paper;
@@ -14,7 +34,7 @@ import java.util.HashMap;
  *
  * @author fyrox
  */
-public class getLocations {
+public class getLocationsFromMirdeep2 {
     public static String organism="";
     public static HashMap<String,gffObject> hm = new HashMap<String, gffObject>();
     

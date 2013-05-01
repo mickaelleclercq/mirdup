@@ -1,4 +1,24 @@
 /*
+ *  miRdup v1.0
+ *  Computational prediction of the localization of microRNAs within their pre-miRNA
+ *  
+ *  Copyright (C) 2013  Mickael Leclercq
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * Run tests
  */
 package paper;
@@ -44,7 +64,8 @@ public class Demo {
 //                      
         //"-r","/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.5/Progs/","-k",
         args = new String[]{"-r",rnafold,
-            "-k","all"};
+            "-k","all","-o","organisms.txt","-e","miRNA.dat","-s","tmpfold72312144.folded"};
+        
 //
 //        args=new String[]{"-c","all.AFAdaboostRF.model","-v","PredictedDatasets\\SRR029124.mirdeep2.toPredict.txt.folded",
 //        "-b","PredictedDatasets\\SRR029124.mirdeep2.toPredict.txt.folded.arff"};
@@ -250,9 +271,12 @@ public class Demo {
     }
     
     private static void RNAcofold() {
+        //ACCCUGUAGAUCCGAAUUUG&AAAUUCGGUUCUAGAGAGGUUUGUG
         ViennaObject vo =Vienna.GetInfosDuplexRNAcofold("ACCCUGUAGAUCCGAAUUUG", "AAAUUCGGUUCUAGAGAGGUUUGUG");
-        System.out.println(vo.toStringHeaderRNAcofold());
-        System.out.println(vo.toStringRNAcofold());
+        System.out.println(vo.ComplexBoltzmannProbability);
+        vo =Vienna.GetInfosDuplexRNAcofoldConstraint("ACCCUGUAGAUCCGAAUUUG", "AAAUUCGGUUCUAGAGAGGUUUGUG","((((((((((((((((((((&)))))))))))))))))))).....");
+        System.out.println(vo.ComplexBoltzmannProbability);
+
     }
 
     private static void getmirnastar() {
