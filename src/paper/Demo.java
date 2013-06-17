@@ -63,8 +63,8 @@ public class Demo {
 //        "PredictedDatasets\\all_lib.pred.mirnas.hairpins.txt.folded.arff"};        
 //                      
         //"-r","/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.5/Progs/","-k",
-        args = new String[]{"-r",rnafold,
-            "-k","all","-o","organisms.txt","-e","miRNA.dat","-s","tmpfold72312144.folded"};
+//        args = new String[]{"-r",rnafold,
+//            "-k","all","-o","organisms.txt","-e","miRNA.dat","-s","tmpfold72312144.folded"};
         
 //
 //        args=new String[]{"-c","all.AFAdaboostRF.model","-v","PredictedDatasets\\SRR029124.mirdeep2.toPredict.txt.folded",
@@ -74,6 +74,10 @@ public class Demo {
 //            "-e","miRNA.dat","-a","all.arff"};
 //        Main.bestFeatures=true;
 //        Main.modelExtension=".BF.SVMmodel";
+        
+        //own sequences
+        args = new String[]{"-r",rnafold,
+            "-m","test.matureSequences.fasta","-h","test.precursorSequences.fasta"};
         Main.main(args);
 
     }
@@ -293,4 +297,5 @@ public class Demo {
         setOptions(args);miRdupExecutionEMBL();
         
     }
+
 }

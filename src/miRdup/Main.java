@@ -40,6 +40,7 @@ import java.util.ArrayList;
 public class Main {
     
     public static boolean debug=false;
+    public static boolean keywordSetted=false;
     
     //RNAfold and RNAduplex path
 //    public static String rnafoldlinux="/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.7/Progs/";//
@@ -152,6 +153,7 @@ public class Main {
             // get keyword
             if (s.startsWith("k")){
                 keyword=s.substring(1).trim();
+                keywordSetted=true;
             }
             
             // get mirbase embl file
@@ -242,9 +244,12 @@ public class Main {
         
         //Execution depending options        
         //if fastas are given
-        if (!matures.isEmpty()&&!hairpins.isEmpty()){
+        if (!matures.isEmpty()&&!hairpins.isEmpty()){      
+            if (keywordSetted==false){
+                keyword="";
+            }
             miRdupExecutionFastas();
-        }
+        } 
         // Normal execution. We get sequences on mirbase using keyword ("all" if empty),
         // then we train the model on it, and if the test dataset is present we submit it to the model
         else if (!classifier.isEmpty()){
@@ -318,7 +323,7 @@ public class Main {
      * Use miRbase fastas source
      */
     public static void miRdupExecutionFastas(){
-
+        String filename=matures.substring(0, matures.lastIndexOf("."));
         // Normal execution. We get sequences on mirbase using keyword ("all" if empty),
         // then we train the model on it, and if the test dataset is present we submit it to the model
         if (!classifier.isEmpty()){
@@ -365,24 +370,24 @@ public class Main {
             if (arffFileForTrain.isEmpty()) {
                 Mirbase m = new Mirbase();
                 ArrayList altrain = m.getSequencesFromFiles(matures,hairpins,organisms,structures,keyword);
-                arff = new File(keyword + ".arff");
+                arff = new File(keyword +""+filename+ ".arff");
                 AdaptDataForWeka.createFileFromList(altrain, arff, false);
             } else {
                 arff= new File(arffFileForTrain);
             }
             // train model       
-            WekaModule.trainModel(arff, keyword);
+            WekaModule.trainModel(arff, keyword+""+filename);
             // submit a file with predicted mirnas and their hairpins to the model
             if (!predictionsFile.isEmpty()) {
                 // test model     
                 arff = null;
                 if (arffFileForValidate.isEmpty()) {
-                    arff = new File(predictionsFile + ".arff");
+                    arff = new File(predictionsFile +".arff");
                     AdaptDataForWeka.createPredictionDataset(predictionsFile, false);
                 } else {
                     arff=new File(arffFileForValidate);
                 }
-                WekaModule.testModel(arff, predictionsFile, keyword+modelExtension, predictMirnaPosition);
+                WekaModule.testModel(arff, predictionsFile, keyword+""+filename+modelExtension, predictMirnaPosition);
             }
         }
     }

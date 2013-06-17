@@ -443,7 +443,7 @@ public class Mirbase {
      * @param keyword 
      */
     public ArrayList getSequencesFromFiles(String matures,String hairpins,String organisms,String structures,String keyword){
-        if (organisms.trim().isEmpty()){
+        if (organisms.trim().isEmpty()&&!keyword.trim().isEmpty()){
             getOrganisms();
             organisms="organisms.txt";
         }
@@ -453,15 +453,24 @@ public class Mirbase {
                 + "\tHairpins:"+hairpins+"\n"
                 + "\tOrganisms:"+organisms+"\n"
                 + "\tStructures of hairpins:"+structures+"\n");
+        if (keyword.trim().isEmpty()){
+            System.out.println("\tNo keyword given, we assume sequences come from another source "
+                    + "than miRbase\n");
+        }
         
         // get species list and add them to a hashmap
-        if (Main.debug) System.out.println("adding organisms in memory...");
-        HashMap<String,String> hmsp= new HashMap<String, String>();
-        if (keyword==null || keyword.isEmpty()) {
-            keyword="all";
-            hmsp = getSpecies(keyword);
-        } else {
-            hmsp = getSpecies(keyword, organisms);
+        HashMap<String, String> hmsp = null;
+        if (!keyword.trim().isEmpty()) {
+            if (Main.debug) {
+                System.out.println("adding organisms in memory...");
+            }
+            hmsp = new HashMap<String, String>();
+            if (keyword.isEmpty()) {
+                keyword = "all";
+                hmsp = getSpecies(keyword);
+            } else {
+                hmsp = getSpecies(keyword, organisms);
+            }
         }
         
         // Add precursors to Hashmap
@@ -473,8 +482,13 @@ public class Mirbase {
             String line="";
             line = br.readLine();
             while (br.ready()){                
-                if (line.startsWith(">")){
-                    String name = line.substring(1, line.indexOf(" ")).trim();
+                if (line!=null&&line.startsWith(">")){
+                    String name = null;
+                    try {
+                        name = line.substring(1, line.indexOf(" ")).trim();
+                    } catch (Exception e) {
+                        name=line.substring(1).trim();
+                    }
                     String seq="";
                     line = br.readLine();                    
                     while (line!=null&&!line.startsWith(">")){
@@ -498,10 +512,14 @@ public class Mirbase {
             while (br.ready()){
                 line=br.readLine();
                 if (line.startsWith(">")){
-                    if (hmsp.containsKey(line.substring(1, line.indexOf("-")))) {
+                    if (keyword.trim().isEmpty()||(hmsp!=null&&hmsp.containsKey(line.substring(1, line.indexOf("-"))))) {
                         MirnaObject m = new MirnaObject();
                         m.setId(cpt++);
-                        m.setFullName(line.substring(1, line.indexOf(" ")).toLowerCase());
+                        try {
+                            m.setFullName(line.substring(1, line.indexOf(" ")).toLowerCase());
+                        } catch (Exception e) {
+                            m.setFullName(line.substring(1));
+                        }
                         
                         String shortname = line.split(" ")[0].replaceAll("\\.[1-9]", "")
                                 .replaceAll("\\.[1-9][1-9]", "")

@@ -35,11 +35,11 @@ MiRdup works in three steps:
 - Predict miRNAs positions on precursors sequences based on a trained model
 
 =====REQUIRED SOFTWARES=====
-- Weka 3.6 (already in lib folder, or you can dowload if at http://www.cs.waikato.ac.nz/~ml/weka/)
+- Weka 3.6 (already in lib folder, or you can dowload it at http://www.cs.waikato.ac.nz/~ml/weka/)
 - Vienna Package installed
 
 MiRdup needs RNAfold and RNAduplex of the Vienna package to work, so you need to download and compile (configure, make) the latest version at http://www.tbi.univie.ac.at/~ronny/RNA/vrna2_source.html. 
-It is strongly recommanded to use LINUX (or MAC) to run miRdup, essentially because RNAfold on windows is stuck to an old version and results would not be similar between different versions. 
+It is strongly recommanded to use LINUX (or MAC) to run miRdup, essentially because RNAfold on windows is stuck to an old version and results won't be similar between different versions. 
 To run miRdup, you must give the path of Vienna package programs (/[your_path]/ViennaRNA-x.x.x/Progs/) with -r option.
 
 If you don't have choice to use windows, simply put RNAfold.exe and RNAduplex.exe available at http://www.tbi.univie.ac.at/~ivo/RNA/windoze/ in the miRdup folder.
@@ -78,7 +78,7 @@ OTHER EXAMPLES:
 - If you want to submit your own sequences to train a model, you must give a fasta file of your mature sequences and your pre-miRNAs. If you generate yourself your data, be careful to keep the same sequences names (after the >) between matures and precursors, as miRbase does. 
 		java -jar miRdup.jar -m someMatures.fasta -h somePremirnas.fasta -r PATH_TO_RNAFOLD
 		
-- If you want to submit a miRbase content without distinction between miRNAs experimentally validated or not, give the fasta files from miRbase. You have to submit the organisms file (option -o) and a species name if you want (option -k). If no species name is submitted, keyword by default will be used (all).
+- If you want to submit a miRbase content without distinction between miRNAs experimentally validated or not, give the fasta files from miRbase. You have to submit the organisms file (option -o) and a species name if you want so (option -k). If no species name is submitted, keyword by default will be used (all).
 		java -jar miRdup.jar -m matures.fasta -h hairpinPrecursors.fasta -k primates -o organisms.txt -r PATH_TO_RNAFOLD
 
 - If the model has already been created, submit it with the validated dataset
@@ -108,7 +108,7 @@ pre-miRNA_ID3	pre-miRNA_sequence3
 
 -r
     Progs folder path of vienna package, usually ../ViennaRNA-2.0.5/Progs/
-    Must be set in linux and Mac. For windows, put executables in C:\
+    Must be set in linux and Mac. For windows, put executables in mirdup folder
 
 -k
     Species keyword. Used to train on a portion of miRbase instead on all miRbase
