@@ -442,20 +442,26 @@ public class Mirbase {
      * Get sequences from miRbase based on a keyword
      * @param keyword 
      */
-    public ArrayList getSequencesFromFiles(String matures,String hairpins,String organisms,String structures,String keyword){
+    public ArrayList getSequencesFromFiles(String matures,String hairpins,String organisms,String structures,String keyword, String filename){
         if (organisms.trim().isEmpty()&&!keyword.trim().isEmpty()){
             getOrganisms();
             organisms="organisms.txt";
         }
         
-        System.out.println("Get informations from submitted files...:\n"
+        
+        if (keyword.trim().isEmpty()){
+            System.out.println("Get informations from submitted files...:\n"
+                + "\tMatures:"+matures+"\n"
+                + "\tHairpins:"+hairpins+"\n"
+                + "\tOrganisms:No keyword given, we assume sequences come from another source "
+                    + "than miRbase\n"
+                + "\tStructures of hairpins:"+structures+"\n");
+        } else {
+            System.out.println("Get informations from submitted files...:\n"
                 + "\tMatures:"+matures+"\n"
                 + "\tHairpins:"+hairpins+"\n"
                 + "\tOrganisms:"+organisms+"\n"
                 + "\tStructures of hairpins:"+structures+"\n");
-        if (keyword.trim().isEmpty()){
-            System.out.println("\tNo keyword given, we assume sequences come from another source "
-                    + "than miRbase\n");
         }
         
         // get species list and add them to a hashmap
@@ -565,8 +571,8 @@ public class Mirbase {
         
         
         try {
-            System.out.println("Print requested sequences in "+keyword+".txt");
-            PrintWriter pw=new PrintWriter(new FileWriter(keyword+".txt"));
+            System.out.println("Print requested sequences in "+filename+".txt");
+            PrintWriter pw=new PrintWriter(new FileWriter(filename+".txt"));
             for (MirnaObject o : alobj) {
                 pw.println(o.toStringTXT());
             }

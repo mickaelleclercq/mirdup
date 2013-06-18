@@ -369,7 +369,7 @@ public class Main {
             File arff = null;
             if (arffFileForTrain.isEmpty()) {
                 Mirbase m = new Mirbase();
-                ArrayList altrain = m.getSequencesFromFiles(matures,hairpins,organisms,structures,keyword);
+                ArrayList altrain = m.getSequencesFromFiles(matures,hairpins,organisms,structures,keyword,filename);
                 arff = new File(keyword +""+filename+ ".arff");
                 AdaptDataForWeka.createFileFromList(altrain, arff, false);
             } else {
@@ -387,7 +387,7 @@ public class Main {
                 } else {
                     arff=new File(arffFileForValidate);
                 }
-                WekaModule.testModel(arff, predictionsFile, keyword+""+filename+modelExtension, predictMirnaPosition);
+                WekaModule.testModel(arff, predictionsFile, keyword+filename+modelExtension, predictMirnaPosition);
             }
         }
     }
@@ -397,7 +397,7 @@ public class Main {
         // search sequences from mirbase based on a keyword
         System.out.println("Attribute selection");
         Mirbase m = new Mirbase();
-        ArrayList altrain = m.getSequencesFromFiles(matures,hairpins,organisms,structures,keyword);
+        ArrayList altrain = m.getSequencesFromFiles(matures,hairpins,organisms,structures,keyword,"tmp");
         // train model
         File arff = new File(keyword+".arff");
         AdaptDataForWeka.createFileFromList(altrain,arff,bestFeatures);      
