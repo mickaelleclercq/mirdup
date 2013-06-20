@@ -46,8 +46,13 @@ public class Predictor {
     public static int threshold=10; //decisionbyproducts
     public static int nbrproducts=20; //decisionbyproducts
     
+    //generate miRNAs length
     public static int minlength=16; 
     public static int maxlength=30; 
+    
+    //choose miRNAs by length
+    public static int minlengthDecision=16; 
+    public static int maxlengthDecision=30;
     
     public static String struct="";
     
@@ -205,7 +210,11 @@ public class Predictor {
                     AlignmentObject ao = new AlignmentObject();
                     ao.setId(line);
                     line=br.readLine();
+                    
                     while(line.startsWith("#FF")){
+                        line=br.readLine();
+                    }
+                    if (line.startsWith("#WE")){
                         line=br.readLine();
                     }
                     if (line.split("\t")[2].startsWith("t")){
@@ -470,7 +479,7 @@ public class Predictor {
         
         ArrayList<String> alscoresmirnas = new ArrayList<String>();
         ArrayList<Double> alscores = new ArrayList<Double>();
-        for (int i = 16; i <= 30; i++) {
+        for (int i = minlengthDecision; i <= maxlengthDecision; i++) {
             for (int j = 0; j < prec.length()-i; j++) {
                 double ss=starts.get(j);
                 double se=ends.get(j+i);
@@ -503,7 +512,13 @@ public class Predictor {
         } else {
             starArm="3'";
         }
-        return consensus+"("+consensusArm+")\t"+miRNAStar+"("+starArm+")";
+        if (miRNAStar.length()>30) {
+            minlengthDecision=minlengthDecision-1;
+            maxlengthDecision=maxlengthDecision-1;
+            return decisionByWindow(results);
+        } else {
+            return consensus + "(" + consensusArm + ")\t" + miRNAStar + "(" + starArm + ")";
+        }
     } 
     
         /**

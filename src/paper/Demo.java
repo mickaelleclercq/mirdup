@@ -78,6 +78,10 @@ public class Demo {
         //own sequences
         args = new String[]{"-r",rnafold,
             "-m","test.matureSequences.fasta","-h","test.precursorSequences.fasta"};
+
+        args = new String[]{"-r",rnafold,
+            "-predict","-i","mirDupTestInput.fasta","-d","maturesTrainMirDup.model",
+            "-f","mirDupTestInput.predict.txt"};
         Main.main(args);
 
     }
