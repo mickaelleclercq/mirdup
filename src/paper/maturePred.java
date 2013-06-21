@@ -19,7 +19,7 @@
  */
 
 /*
- * Submit sequences to miRalign
+ * Submit sequences to maturepred
  */
 package paper;
 
@@ -95,7 +95,7 @@ public class maturePred {
                     System.out.print(mirnaName+"\t");
                     String prec = line.split("\t")[3];
                     String structure = line.split("\t")[4];
-                    //execute miRalign and get start and end position of the predicted miRNA
+                    //execute maturepred and get start and end position of the predicted miRNA
                     int diffStartFromMiRNA ;
                     int diffendFromMiRNA ;
                     int diffStartFromMiRNAStar = 0;

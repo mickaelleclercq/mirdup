@@ -83,7 +83,7 @@ public class miRalign {
                         data.put("delta", "15");
                         data.put("min_seq_sim", "30");
                         data.put("MFE", "20");
-                        String results = executeMaturePred(data);
+                        String results = executeMiRalign(data);
                         String code = getCode(results);
 
                         int startPosition = code.split("\n")[5].indexOf("*");
@@ -194,7 +194,7 @@ public class miRalign {
         }
     }
     
-    private static String executeMiRalign(String konwnMirna, String prec) {
+    private static String executeMiRalign2(String konwnMirna, String prec) {
         //execute miRalign and get start and end position of the predicted miRNA
         try {
             Map<String, String> data = new HashMap<String, String>();
@@ -203,7 +203,7 @@ public class miRalign {
             data.put("delta", "15");
             data.put("min_seq_sim", "30");
             data.put("MFE", "20");
-            String results = executeMaturePred(data);
+            String results = executeMiRalign(data);
             String code = getCode(results);
             
             int startPosition = code.split("\n")[5].indexOf("*");
@@ -234,7 +234,7 @@ public class miRalign {
         data.put("delta", "15");
         data.put("min_seq_sim", "30");
         data.put("MFE", "20");
-        String results=executeMaturePred(data);
+        String results=executeMiRalign(data);
         String code = getCode(results);
         int mirnastart=code.split("\n")[5].indexOf("*");
         int mirnaend=code.split("\n")[5].lastIndexOf("*");
@@ -247,7 +247,7 @@ public class miRalign {
      * @param data
      * @return 
      */
-    public static String executeMaturePred(Map<String, String> data) {
+    public static String executeMiRalign(Map<String, String> data) {
         String link="";
 	try{
             URL siteUrl = new URL("http://bioinfo.au.tsinghua.edu.cn/miralign/predict.php");
