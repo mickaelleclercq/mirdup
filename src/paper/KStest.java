@@ -73,7 +73,7 @@ public class KStest {
     }
     
     
-        private static void analyseFiles(String infiles[]) {
+    private static void analyseFiles(String infiles[]) {
         int max=0;
         int file=0;
         for (int i = 0; i < infiles.length; i++) {           
@@ -395,7 +395,7 @@ public class KStest {
             //compare species between each other
             Double comparetab[][]=new Double[cumultab.length][15];  
             int m=0;
-                for (int i = 0; i < infiles.length-1; i++) {                
+            for (int i = 0; i < infiles.length-1; i++) {                
                 for (int j = i+1; j < infiles.length; j++) {                    
                     for (int k = 0; k < cumultab.length; k++) {                        
                         double comp=Math.abs(cumultab[k][i]-cumultab[k][j]);

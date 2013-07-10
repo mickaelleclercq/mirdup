@@ -23,6 +23,8 @@
  */
 package miRdup;
 
+import java.text.DecimalFormat;
+
 /**
  * 
  * @author Mickael Leclercq
@@ -52,8 +54,10 @@ public final class MirnaObject {
     private String predictedmiRNA;
     private String predictedmiRNAstar;
     private String error;
+    static DecimalFormat dec = new DecimalFormat();
     
     public MirnaObject(){
+        dec.setMaximumFractionDigits(2);
         
     }
     
@@ -279,14 +283,14 @@ public final class MirnaObject {
         return s;
     }    
     
-    public String toStringPredictions(){
+    public String toStringPredictions(){        
         String s=""+
                 this.getIdName()+"\t"+
                 this.getMatureSequence()+"\t"+
                 this.getPrecursorSequence()+"\t"+
                 this.getStructure()+"\t"+
                 this.isValidated()+"\t"+                
-                this.getScore();
+                dec.format(this.getScore());
         try {
             if (this.isNeedPrediction() && this.isValidated() == false) {
                 s += "\t" + this.getPredictedmiRNA() + "\t"

@@ -56,6 +56,7 @@ import weka.gui.visualize.ThresholdVisualizePanel;
 public class WekaModule {
     static DecimalFormat dec = new DecimalFormat();
     
+    
     public static void trainModel(File arff, String keyword) {
         dec.setMaximumFractionDigits(3);
         System.out.println("\nTraining model on file "+arff);
@@ -221,6 +222,7 @@ public class WekaModule {
     
     public static void testModel(File testarff, String predictionsFile, String classifier, boolean predictMiRNA) {
         System.out.println("Testing model on "+predictionsFile+" adapted in "+testarff+". Submitted to model "+classifier);
+        
         try {
             //add predictions sequences to object
             ArrayList<MirnaObject> alobj = new ArrayList<MirnaObject>();
@@ -287,7 +289,8 @@ public class WekaModule {
                 if (actual==predicted){ //case validated 
                     int s = tab[4].length();
                     try {
-                        score = Double.valueOf(tab[4].substring(0, s - 1));
+                        score = Double.valueOf(tab[4]);
+                        //score = Double.valueOf(tab[4].substring(0, s - 1));
                     } catch (NumberFormatException numberFormatException) {
                         score=0.0;
                     }
@@ -296,7 +299,8 @@ public class WekaModule {
                 } else {// case not validated
                     int s = tab[5].length();
                     try {
-                        score = Double.valueOf(tab[5].substring(0, s - 1));
+                        score = Double.valueOf(tab[5]);
+                        //score = Double.valueOf(tab[5].substring(0, s - 1));
                     } catch (NumberFormatException numberFormatException) {
                         score=0.0;
                     }
