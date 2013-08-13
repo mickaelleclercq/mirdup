@@ -36,13 +36,13 @@ public class Demo {
     public static String rnafold="/home/mycky/tools/ViennaRNA-2.0.6/Progs/";
 //    public static String rnafold="/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.7/Progs/";
     public static void main(String[] args) {   
-        tests();
+//        tests();
 //        batchTrain();
 //        AttributeSelection();
 //        validationSpecies();
 //        batchTest();
 //        predictmiRNAposition();
-//        predictmiRNApositionByFile();
+        predictmiRNApositionByFile();
 //        newRNAfold();
 //        getmirnastar();
 //        validate();
@@ -270,12 +270,12 @@ public class Demo {
     }
 
     private static void predictmiRNAposition() {
-        String prec=  "CCACGUCUACCCUGUAGAUCCGAAUUUGUUUUAUACUAGCUUUAAGGACAAAUUCGGUUCUAGAGAGGUUUGUGUGG";
-        miRdupPredictor.Predictor.predictionBySequence(prec, "Arthropoda.model","test.txt");
+        String prec=  "ACCCGAGGACGAGAUACAGUGCAGCAUCGCGGGACGGAAAUCUUCCUUUGCGUGUACCUUCUCUUGUCCCAUCCUGGU";
+        miRdupPredictor.Predictor.predictionBySequence(prec, "monocot.model","test2.txt");
     }
 
     private static void predictmiRNApositionByFile() {
-        miRdupPredictor.Predictor.predictionByFile("test.txt", "Pisces.model", "test.predictions");
+        miRdupPredictor.Predictor.predictionByFile("test.txt", "monocot.model", "test.predictions");
     }
 
     private static void newRNAfold() {

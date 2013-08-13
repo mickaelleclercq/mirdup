@@ -48,7 +48,7 @@ If you don't have choice to use windows, simply put RNAfold.exe and RNAduplex.ex
 =====USAGE=====
 
 TRAINING AND MIRNA VALIDATION
-MiRdup train a model from a particular input of miRbase sequences. You don't have to submit miRbase content, the program will retrieve sequences itself if you have an internet connexion. Nevertheless, miRdup has options if you want to submit miRbase in offline mode. 
+MiRdup train a model from a particular input of miRbase sequences. You don't have to submit miRbase content, the program will retrieve sequences itself if you have an internet connexion. Nevertheless, miRdup has options if you want to submit miRbase in offline mode. Be careful to use RNA sequences (U's instead of T's).
 
 MiRdup may be executed in several ways: 
 

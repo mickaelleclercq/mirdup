@@ -425,7 +425,7 @@ public class Main {
 
     private static void mirdupExecutionPredictor() {
         miRdupPredictor.Predictor.rnafold=rnafoldlinux;
-        if (!predictionInfile.isEmpty()){
+        if (!predictionInfile.isEmpty()){            
             miRdupPredictor.Predictor.predictionByFile(predictionInfile, model, predictionOutfile); 
         } else {
             String predictionMiRNA=miRdupPredictor.Predictor.predictionBySequence(

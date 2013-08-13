@@ -78,6 +78,7 @@ public class Predictor {
                     line = br.readLine();
                     loopflag=0;
                     maximas=0;
+                    
                     struct="";
                     System.out.println("\n----------");
                     
@@ -85,15 +86,16 @@ public class Predictor {
                     String prec="";
                     if (line.split("\t").length==2){
                         name = line.split("\t")[0];
-                        prec = line.split("\t")[1];
+                        prec = line.split("\t")[1].replace("T", "U");
                         System.out.println(line+"\t");
                     } else if (line.startsWith(">")){
                             name = line.substring(1);
                             line = br.readLine();
-                            prec=line;
+                            prec=line.replace("T", "U");;
                             System.out.println(name+"\t"+prec);
                         }
-                    
+                    minlengthDecision=16; 
+                    maxlengthDecision=30;
                     String result=executeGenerator(prec, model,outfile+"_tmpfile");
                     System.out.println("Predicted miRNA in 3' and 5': "+result);
                     pw.println(name+"\t"+prec+"\t"+struct+"\t"+result);
