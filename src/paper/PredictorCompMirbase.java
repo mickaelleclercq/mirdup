@@ -41,9 +41,9 @@ import miRdupPredictor.AlignmentObject;
  * @author fyrox
  */
 public class PredictorCompMirbase {
-//    public static String rnafold="/home/mycky/tools/ViennaRNA-2.0.6/Progs/";
+    public static String rnafold="/home/mycky/tools/ViennaRNA-2.0.6/Progs/";
 //    public static String rnafold="/home/2011/mlecle25/tools/ViennaRNA-2.0.7/Progs/";
-    public static String rnafold="/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.7/Progs/";
+//    public static String rnafold="/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.7/Progs/";
     public static int loopflag=0; //flag to detect looping over the same function by recursion 
     public static int maximas=0; //When looping over the same function by recursion, this value take the second (three, and so on) maxima instead of the first
     public static boolean debug=false;
