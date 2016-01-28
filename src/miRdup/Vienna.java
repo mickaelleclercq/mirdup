@@ -88,7 +88,7 @@ public class Vienna {
         String os = System.getProperty("os.name").toLowerCase();
         File f = null;
         if (os.startsWith("win")) {
-            f = new File("c:/tmpfold" + (Math.abs((int) (Calendar.getInstance().hashCode() / (new Date()).getTime() + Math.random() * 10000000) * 10000)));
+            f = new File(/*c:/*/"tmpfold" + (Math.abs((int) (Calendar.getInstance().hashCode() / (new Date()).getTime() + Math.random() * 10000000) * 10000)));
         } else {
             f = new File("tmpfold" + (Math.abs((int) (Calendar.getInstance().hashCode() / (new Date()).getTime() + Math.random() * 10000000) * 10000)));
         }
@@ -100,7 +100,7 @@ public class Vienna {
             output = "";
 
             if (os.startsWith("win")) {
-                output = Tools.executeWindowsCommand("RNAfold.exe -noPS < " + f.getAbsolutePath());
+                output = Tools.executeWindowsCommand("RNAfold.exe --noPS < " + f.getAbsolutePath());
             } else {
                 output = Tools.executeLinuxCommand(Main.rnafoldlinux + "RNAfold --noPS < " + f.getAbsolutePath());
             }
@@ -133,8 +133,8 @@ public class Vienna {
             String cmd = "";
             output = "";
             if (os.startsWith("win")) {
-                //cmd="cmd /C RNAfold.exe -noPS";
-                cmd = "RNAfold.exe -noPS";
+                //cmd="cmd /C RNAfold.exe --noPS";
+                cmd = Main.rnafoldlinux + "\\RNAfold.exe --noPS";
             } else {
                 cmd = Main.rnafoldlinux + "RNAfold --noPS";
             }
@@ -177,12 +177,11 @@ public class Vienna {
             pw.close();
             String os = System.getProperty("os.name").toLowerCase();
             if (os.startsWith("win")) {
-                Tools.executeWindowsCommandToFile("RNAfold.exe -noPS < " + infile.getAbsolutePath() + ">" + outfile.getAbsolutePath());
+                Tools.executeWindowsCommandToFile("RNAfold.exe --noPS < " + infile.getAbsolutePath() + ">" + outfile.getAbsolutePath());
             } else {
                 //
                 Tools.executeLinuxCommandToFile(Main.rnafoldlinux + "RNAfold --noPS < " + infile.getAbsolutePath() + ">" + outfile.getAbsolutePath());
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,7 +209,6 @@ public class Vienna {
             } else {
                 Tools.executeLinuxCommandToFile(Main.rnafoldlinux + "RNAduplex < " + infile.getAbsolutePath() + ">" + outfile.getAbsolutePath());
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -342,7 +340,7 @@ public class Vienna {
             }
             String os = System.getProperty("os.name").toLowerCase();
             if (os.startsWith("win")) {
-                f = new File("c:/tmpfolddup" + (Math.abs((int) (Calendar.getInstance().hashCode() / (new Date()).getTime() + Math.random() * 10000000) * 10000)));
+                f = new File(/*c:/*/"tmpfolddup" + (Math.abs((int) (Calendar.getInstance().hashCode() / (new Date()).getTime() + Math.random() * 10000000) * 10000)));
                 PrintWriter pw = new PrintWriter(new FileWriter(f));
                 pw.write(mirna + "\n" + mirnastar);
                 pw.close();

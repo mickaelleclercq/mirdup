@@ -1,8 +1,8 @@
 /*
- *  miRdup v1.0
+ *  miRdup v1.4
  *  Computational prediction of the localization of microRNAs within their pre-miRNA
  *  
- *  Copyright (C) 2013  Mickael Leclercq
+ *  Copyright (C) 2015  Mickael Leclercq
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-miRdup 1.0 Help file
+miRdup 1.4 Help file
 Author : Mickael Leclercq
 mickael.leclercq@mail.mcgill.ca
 2012
@@ -39,10 +39,9 @@ MiRdup works in three steps:
 - Vienna Package installed
 
 MiRdup needs RNAfold and RNAduplex of the Vienna package to work, so you need to download and compile (configure, make) the latest version at http://www.tbi.univie.ac.at/~ronny/RNA/vrna2_source.html. 
-It is strongly recommanded to use LINUX (or MAC) to run miRdup, essentially because RNAfold on windows is stuck to an old version and results won't be similar between different versions. 
-To run miRdup, you must give the path of Vienna package programs (/[your_path]/ViennaRNA-x.x.x/Progs/) with -r option.
+To run miRdup on linux, you must give the path of Vienna package programs (/[your_path]/ViennaRNA-x.x.x/Progs/) with -r option.
 
-If you don't have choice to use windows, simply put RNAfold.exe and RNAduplex.exe available at http://www.tbi.univie.ac.at/~ivo/RNA/windoze/ in the miRdup folder.
+To run it on windows, install the last version of Vienna availalble at http://www.tbi.univie.ac.at/RNA/index.html#download, in the miRdup folder, or install it whenever you want and copy RNAfold.exe, RNAduplex.exe and dlls in miRdup folder. 
 
 
 =====USAGE=====
@@ -53,10 +52,10 @@ MiRdup train a model from a particular input of miRbase sequences. You don't hav
 MiRdup may be executed in several ways: 
 
 - To train a model on all miRbase sequences, use this command: 
-	Linux/Mac:	java -Xms500m -Xmx1500m -jar miRdup.jar -r /home/user/my_user/ViennaRNA-x.x.x/Progs/
-	Windows:	java -Xms500m -Xmx1500m -jar miRdup.jar 
+	Linux/Mac:	java -Xms500m -Xmx3500m -jar miRdup.jar -r /home/user/my_user/ViennaRNA-x.x.x/Progs/
+	Windows:	java -Xms500m -Xmx3500m -jar miRdup.jar 
 
--Xms500m -Xmx1500m are needed to increase memory if miRdup is trained on all miRbase.	
+-Xms500m -Xmx3500m are needed to increase memory if miRdup is trained on all miRbase.	
 		
 - To train a model on a specific set of sequences, use a keyword with option -k (example with primates) : 
 		java -jar miRdup.jar -k primates -r PATH_TO_RNAFOLD		
@@ -88,7 +87,7 @@ OTHER EXAMPLES:
 		java -jar miRdup.jar -v sequencesToValidate.txt -c species.model -p -r PATH_TO_RNAFOLD
 		
 - If you get Java heap space Exceptions (java.lang.OutOfMemoryError), increase memory like this: 
-		java -jar -Xms500m -Xmx1500m miRdup.jar [OPTIONS]
+		java -jar -Xms500m -Xmx3500m miRdup.jar [OPTIONS]
 		(increase the 1500m if you still have java heap space errors)
 
 		

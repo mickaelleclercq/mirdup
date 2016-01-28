@@ -34,8 +34,9 @@ import miRdup.*;
  */
 public class Demo {
 
-    public static String rnafold = "/home/mycky/tools/ViennaRNA-2.0.6/Progs/";
+//    public static String rnafold = "/home/mycky/tools/ViennaRNA-2.0.6/Progs/";
 //    public static String rnafold="/ibrixfs1/Data/mik/tools/ViennaRNA-2.0.7/Progs/";
+    public static String rnafold = "C:\\vienna\\";
 
     public static void main(String[] args) {
 //        tests();
@@ -301,7 +302,7 @@ public class Demo {
     }
 
     private static void predict() {
-        String[] args = new String[]{"-predict", "-d", "arthropod.model", "-u", "GGAGAGGTGGCTGAGTGGTCGAAAGCGGCTGGAATTCTCGGGCCAAGGAACTCCAGTCACGTGAAAATCTCGTATGCCGTCTTCTGCT", "-f", "test_output_file","-r", rnafold};
+        String[] args = new String[]{"-predict", "-d", "all.model", "-u", "AAAAUAUCAAAGCUAUGGACAAUAACUUUGGUUUUACACUCGGUUCAGGGAGAUCUGAGCUUGAAUAUUUUACGGCUUUUUUAGUGCUUAUGACGUUAAUAGUCCCGAUUGUUUUAUGAAUACAUUUUGAAACCGAUACAAUUAUUUCAAGUUUUUUAACCGCUUUAUUUAUUUUUACGUUUAACACUUCUCUGGUUCUU", "-f", "test_output_file", "-r", rnafold};
         setOptions(args);
         Main.mirdupExecutionPredictor();
     }
